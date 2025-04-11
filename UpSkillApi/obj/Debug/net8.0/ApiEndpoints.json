@@ -1,0 +1,48 @@
+[
+  {
+    "ContainingType": "UpSkillApi.Controllers.ProfessionsController",
+    "Method": "GetProfessions",
+    "RelativePath": "api/Professions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[UpSkillApi.DTOs.ProfessionDto, UpSkillApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "UpSkillApi.Controllers.WorkersController",
+    "Method": "GetWorkersByProfession",
+    "RelativePath": "api/Workers/profession/{profession}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "profession",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[UpSkillApi.DTOs.WorkerByProfessionDto, UpSkillApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  }
+]
