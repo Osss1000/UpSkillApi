@@ -8,6 +8,7 @@ public partial class User
     public int UserId { get; set; }
 
     public string Name { get; set; } = null!;
+    public string? Bio { get; set; }
 
     public string Email { get; set; } = null!;
 

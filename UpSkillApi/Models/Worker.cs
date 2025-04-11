@@ -29,7 +29,7 @@ public partial class Worker
 
     public decimal? HourlyRate { get; set; }
 
-    public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+    public virtual List<Rating> Ratings { get; set; } = new List<Rating>();
 
     public virtual User User { get; set; } = null!;
 

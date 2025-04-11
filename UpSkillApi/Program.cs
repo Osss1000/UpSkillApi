@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using UpSkillApi.Data;
+using UpSkillApi.Repositories;
+
 namespace UpSkillApi;
 
 public class Program
@@ -7,11 +11,17 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        // Register DbContext with connection string from appsettings
+        builder.Services.AddDbContext<UpSkillDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        // Register repository directly
+        builder.Services.AddScoped<ProfessionRepository>();
+        builder.Services.AddScoped<WorkerRepository>();
 
         var app = builder.Build();
 
@@ -25,7 +35,6 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
 
         app.MapControllers();
 
