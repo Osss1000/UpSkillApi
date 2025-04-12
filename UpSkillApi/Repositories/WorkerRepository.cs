@@ -12,7 +12,7 @@ namespace UpSkillApi.Repositories
         {
             _context = context;
         }
-        
+
         public async Task<List<WorkerByProfessionDto>> GetWorkersByProfessionNameAsync(string professionName)
         {
             var workers = await _context.Workers
@@ -33,7 +33,7 @@ namespace UpSkillApi.Repositories
 
             return result;
         }
-        
+
         public async Task<List<WorkerByProfessionDto>> SearchWorkersByNameAsync(string name)
         {
             var workers = await _context.Workers
@@ -50,18 +50,18 @@ namespace UpSkillApi.Repositories
                 AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0,
                 ExperienceYears = w.Experience
             }).ToList();
- 
+
             return result;
         }
-        
+
         public async Task<WorkerProfileDto?> GetWorkerProfileByIdAsync(int workerId)
         {
             var worker = await _context.Workers
                 .Include(w => w.User)
                 .Include(w => w.Profession)
                 .Include(w => w.Ratings)
-                .ThenInclude(r => r.Client)
-                .ThenInclude(c => c.User)
+                    .ThenInclude(r => r.Client)
+                    .ThenInclude(c => c.User)
                 .FirstOrDefaultAsync(w => w.WorkerId == workerId);
 
             if (worker == null)
@@ -90,7 +90,7 @@ namespace UpSkillApi.Repositories
 
             return profile;
         }
-        
+
         public async Task<List<WorkerByProfessionDto>> FilterWorkersAsync(WorkerFilterDto filter)
         {
             var workersQuery = _context.Workers
@@ -115,7 +115,7 @@ namespace UpSkillApi.Repositories
             var workers = await workersQuery.ToListAsync();
 
             var filtered = workers
-                .Where(w => !filter.MinRating.HasValue || 
+                .Where(w => !filter.MinRating.HasValue ||
                             (w.Ratings.Any() && w.Ratings.Average(r => r.Score) >= filter.MinRating))
                 .Select(w => new WorkerByProfessionDto
                 {
