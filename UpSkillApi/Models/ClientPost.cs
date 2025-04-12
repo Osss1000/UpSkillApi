@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace UpSkillApi.Models;
 
 public partial class ClientPost
 {
-    public int ClientPostId { get; set; }
+    [Key]
+    public int PostId { get; set; }
 
     public string Title { get; set; } = null!;
 
     public decimal? Price { get; set; }
 
     public string Profession { get; set; } = null!;
+
+    public bool IsCompleted { get; set; } = false;
+
+    public DateTime? CompletedAt { get; set; }
 
     public DateTime? DateAndTime { get; set; }
 

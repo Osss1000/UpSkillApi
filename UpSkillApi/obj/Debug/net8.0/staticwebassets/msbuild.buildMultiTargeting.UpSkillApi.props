@@ -1,3 +1,3 @@
 ﻿<Project>
-  <Import Project="../build/UpSkillApi.props" />
+  <Import Project="..\build\UpSkillApi.props" />
 </Project>

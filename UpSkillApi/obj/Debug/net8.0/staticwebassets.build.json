@@ -1,11 +1,12 @@
 {
   "Version": 1,
-  "Hash": "m0Sz2gsiY/nVnAJu5Saq3ZpwfHl87EK3IGyYOKn7yq4=",
+  "Hash": "sFlzUX2pZ5BGA7xkeOeMJNjBoy/IzaXX9LFLxoKSsIA=",
   "Source": "UpSkillApi",
   "BasePath": "_content/UpSkillApi",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": []
+  "Assets": [],
+  "Endpoints": []
 }

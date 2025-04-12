@@ -23,7 +23,7 @@ namespace UpSkillApi.Repositories
                     FullName = w.User.Name,
                     Bio = w.User.Bio,
                     Location = w.Address,
-                    Rating = w.Ratings,
+                    Rating = (List<Models.Rating>)w.Ratings,
                     ExperienceYears = w.Experience
                 })
                 .ToListAsync();

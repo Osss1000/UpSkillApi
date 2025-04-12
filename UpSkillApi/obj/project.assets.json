@@ -4443,24 +4443,31 @@
     ]
   },
   "packageFolders": {
-    "/Users/osamashaaban/.nuget/packages/": {}
+    "C:\\Users\\abdelrahman\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/osamashaaban/Documents/RiderAPI_Projects/UpSkillApi/UpSkillApi/UpSkillApi.csproj",
+      "projectUniqueName": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi.csproj",
       "projectName": "UpSkillApi",
-      "projectPath": "/Users/osamashaaban/Documents/RiderAPI_Projects/UpSkillApi/UpSkillApi/UpSkillApi.csproj",
-      "packagesPath": "/Users/osamashaaban/.nuget/packages/",
-      "outputPath": "/Users/osamashaaban/Documents/RiderAPI_Projects/UpSkillApi/UpSkillApi/obj/",
+      "projectPath": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi.csproj",
+      "packagesPath": "C:\\Users\\abdelrahman\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/osamashaaban/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\abdelrahman\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4478,7 +4485,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -4528,7 +4536,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.407/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -8,9 +8,10 @@ public partial class User
     public int UserId { get; set; }
 
     public string Name { get; set; } = null!;
-    public string? Bio { get; set; }
 
     public string Email { get; set; } = null!;
+
+    public string Password { get; set; }
 
     public string Role { get; set; } = null!;
 
@@ -29,4 +30,5 @@ public partial class User
     public virtual Organization? Organization { get; set; }
 
     public virtual Worker? Worker { get; set; }
+    public string Bio { get; internal set; }
 }
