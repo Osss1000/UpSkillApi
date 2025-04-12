@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UpSkillApi.Data;
 
@@ -11,9 +12,11 @@ using UpSkillApi.Data;
 namespace UpSkillApi.Migrations
 {
     [DbContext(typeof(UpSkillDbContext))]
-    partial class UpSkillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250412220855_ProfessionTableAndSeedIt")]
+    partial class ProfessionTableAndSeedIt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -323,71 +326,16 @@ namespace UpSkillApi.Migrations
                         new
                         {
                             ProfessionId = 6,
-                            Name = "عامل بناء"
+                            Name = "تمريض"
                         },
                         new
                         {
                             ProfessionId = 7,
-                            Name = "فني رخام"
+                            Name = "تعليم"
                         },
                         new
                         {
                             ProfessionId = 8,
-                            Name = "فني سيراميك"
-                        },
-                        new
-                        {
-                            ProfessionId = 9,
-                            Name = "خياطة"
-                        },
-                        new
-                        {
-                            ProfessionId = 10,
-                            Name = "سجاد يدوي"
-                        },
-                        new
-                        {
-                            ProfessionId = 11,
-                            Name = "حفر علي الخشب"
-                        },
-                        new
-                        {
-                            ProfessionId = 12,
-                            Name = "كروشيه و تريكوه"
-                        },
-                        new
-                        {
-                            ProfessionId = 13,
-                            Name = "تطريز يدوي"
-                        },
-                        new
-                        {
-                            ProfessionId = 14,
-                            Name = "اكسسوارات يدوية"
-                        },
-                        new
-                        {
-                            ProfessionId = 15,
-                            Name = "صناعة شموع"
-                        },
-                        new
-                        {
-                            ProfessionId = 16,
-                            Name = "صناعة فخار"
-                        },
-                        new
-                        {
-                            ProfessionId = 17,
-                            Name = "الرسم"
-                        },
-                        new
-                        {
-                            ProfessionId = 18,
-                            Name = "الرسم علي الزجاج"
-                        },
-                        new
-                        {
-                            ProfessionId = 19,
                             Name = "أخرى"
                         });
                 });
