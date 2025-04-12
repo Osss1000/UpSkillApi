@@ -16,10 +16,14 @@ namespace UpSkillApi.Controllers
         }
 
         // GET: /api/workers/profession/نجار
-        [HttpGet("profession/{profession}")]
-        public async Task<ActionResult<List<WorkerByProfessionDto>>> GetWorkersByProfession(string profession)
+        [HttpGet("by-profession/{professionName}")]
+        public async Task<ActionResult<List<WorkerByProfessionDto>>> GetWorkersByProfession(string professionName)
         {
-            var workers = await _workerRepository.GetWorkersByProfessionAsync(profession);
+            var workers = await _workerRepository.GetWorkersByProfessionNameAsync(professionName);
+    
+            if (workers == null || workers.Count == 0)
+                return NotFound($"No workers found for profession: {professionName}");
+
             return Ok(workers);
         }
         

@@ -8,9 +8,6 @@ public partial class Worker
     public int WorkerId { get; set; }
 
     public int? Experience { get; set; }
-
-    public string Profession { get; set; } = null!;
-
     public string NationalId { get; set; } = null!;
 
     public string? FrontNationalIdPath { get; set; }
@@ -32,6 +29,8 @@ public partial class Worker
     public virtual List<Rating> Ratings { get; set; } = new List<Rating>();
 
     public virtual User User { get; set; } = null!;
+    public int ProfessionId { get; set; }  // Foreign key
+    public Profession Profession { get; set; } = null!;
 
     public virtual ICollection<VolunteeringApplication> VolunteeringApplications { get; set; } = new List<VolunteeringApplication>();
 

@@ -12,13 +12,14 @@ namespace UpSkillApi.Repositories
         {
             _context = context;
         }
-
-        public async Task<List<WorkerByProfessionDto>> GetWorkersByProfessionAsync(string profession)
+        
+        public async Task<List<WorkerByProfessionDto>> GetWorkersByProfessionNameAsync(string professionName)
         {
             var workers = await _context.Workers
                 .Include(w => w.User)
                 .Include(w => w.Ratings)
-                .Where(w => w.Profession == profession)
+                .Include(w => w.Profession)
+                .Where(w => w.Profession.Name == professionName)
                 .ToListAsync();
 
             var result = workers.Select(w => new WorkerByProfessionDto
@@ -26,8 +27,8 @@ namespace UpSkillApi.Repositories
                 FullName = w.User.Name,
                 Bio = w.User.Bio,
                 Location = w.Address,
-                AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0,
-                ExperienceYears = w.Experience
+                ExperienceYears = w.Experience,
+                AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0
             }).ToList();
 
             return result;
@@ -49,7 +50,7 @@ namespace UpSkillApi.Repositories
                 AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0,
                 ExperienceYears = w.Experience
             }).ToList();
-
+ 
             return result;
         }
         
@@ -57,6 +58,7 @@ namespace UpSkillApi.Repositories
         {
             var worker = await _context.Workers
                 .Include(w => w.User)
+                .Include(w => w.Profession)
                 .Include(w => w.Ratings)
                 .ThenInclude(r => r.Client)
                 .ThenInclude(c => c.User)
@@ -69,7 +71,7 @@ namespace UpSkillApi.Repositories
             {
                 FullName = worker.User.Name,
                 Bio = worker.User.Bio,
-                Profession = worker.Profession,
+                Profession = worker.Profession?.Name,
                 ExperienceYears = worker.Experience,
                 PhoneNumber = worker.User.PhoneNumber,
                 Address = worker.Address,
@@ -100,7 +102,9 @@ namespace UpSkillApi.Repositories
                 workersQuery = workersQuery.Where(w => w.Address.Contains(filter.Address));
 
             if (!string.IsNullOrWhiteSpace(filter.Profession))
-                workersQuery = workersQuery.Where(w => w.Profession == filter.Profession);
+                workersQuery = workersQuery
+                    .Include(w => w.Profession)
+                    .Where(w => w.Profession.Name == filter.Profession);
 
             if (filter.MinPrice.HasValue)
                 workersQuery = workersQuery.Where(w => w.HourlyRate >= filter.MinPrice);

@@ -27,7 +27,8 @@ public partial class UpSkillDbContext : DbContext
     public virtual DbSet<Rating> Ratings { get; set; }
 
     public virtual DbSet<Sponsor> Sponsors { get; set; }
-
+    
+    public DbSet<Profession> Professions { get; set; }
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<VolunteeringApplication> VolunteeringApplications { get; set; }
@@ -40,6 +41,32 @@ public partial class UpSkillDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        
+        
+
+        // Seeding fixed professions
+        modelBuilder.Entity<Profession>().HasData(
+            new Profession { ProfessionId = 1, Name = "نجار" },
+            new Profession { ProfessionId = 2, Name = "سباك" },
+            new Profession { ProfessionId = 3, Name = "كهربائي" },
+            new Profession { ProfessionId = 4, Name = "حداد" },
+            new Profession { ProfessionId = 5, Name = "نقاش" },
+            new Profession { ProfessionId = 6, Name = "عامل بناء" },
+            new Profession { ProfessionId = 7, Name = "فني رخام" },
+            new Profession { ProfessionId = 8, Name = "فني سيراميك" },
+            new Profession { ProfessionId = 9, Name = "خياطة" },
+            new Profession { ProfessionId = 10, Name = "سجاد يدوي" },
+            new Profession { ProfessionId = 11, Name = "حفر علي الخشب" },
+            new Profession { ProfessionId = 12, Name = "كروشيه و تريكوه" },
+            new Profession { ProfessionId = 13, Name = "تطريز يدوي" },
+            new Profession { ProfessionId = 14, Name = "اكسسوارات يدوية" },
+            new Profession { ProfessionId = 15, Name = "صناعة شموع" },
+            new Profession { ProfessionId = 16, Name = "صناعة فخار" },
+            new Profession { ProfessionId = 17, Name = "الرسم" },
+            new Profession { ProfessionId = 18, Name = "الرسم علي الزجاج" },
+            new Profession { ProfessionId = 19, Name = "أخرى" }
+        );
+        
         modelBuilder.Entity<Advertisement>(entity =>
         {
             entity.HasIndex(e => e.SponsorId, "IX_Advertisements_SponsorId");
@@ -178,13 +205,16 @@ public partial class UpSkillDbContext : DbContext
         modelBuilder.Entity<Worker>(entity =>
         {
             entity.HasIndex(e => e.NationalId, "IX_Workers_NationalId").IsUnique();
-
             entity.HasIndex(e => e.UserId, "IX_Workers_UserId").IsUnique();
 
             entity.Property(e => e.HourlyRate).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.Profession).HasMaxLength(50);
 
-            entity.HasOne(d => d.User).WithOne(p => p.Worker).HasForeignKey<Worker>(d => d.UserId);
+            entity.HasOne(d => d.User)
+                .WithOne(p => p.Worker)
+                .HasForeignKey<Worker>(d => d.UserId);
+            entity.HasOne(w => w.Profession)
+                .WithMany(p => p.Workers)
+                .HasForeignKey(w => w.ProfessionId);
         });
 
         modelBuilder.Entity<WorkerApplication>(entity =>

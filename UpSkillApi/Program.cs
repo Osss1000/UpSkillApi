@@ -20,7 +20,6 @@ public class Program
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         // Register repository directly
-        builder.Services.AddScoped<ProfessionRepository>();
         builder.Services.AddScoped<WorkerRepository>();
         builder.Services.AddScoped<AdvertisementRepository>();
         builder.Services.AddScoped<UserRepository>();
