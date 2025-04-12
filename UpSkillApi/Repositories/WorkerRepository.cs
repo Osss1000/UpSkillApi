@@ -16,19 +16,41 @@ namespace UpSkillApi.Repositories
         public async Task<List<WorkerByProfessionDto>> GetWorkersByProfessionAsync(string profession)
         {
             var workers = await _context.Workers
-                .Include(w => w.User) // in case full name or location comes from User table
+                .Include(w => w.User)
+                .Include(w => w.Ratings)
                 .Where(w => w.Profession == profession)
-                .Select(w => new WorkerByProfessionDto
-                {
-                    FullName = w.User.Name,
-                    Bio = w.User.Bio,
-                    Location = w.Address,
-                    Rating = w.Ratings,
-                    ExperienceYears = w.Experience
-                })
                 .ToListAsync();
 
-            return workers;
+            var result = workers.Select(w => new WorkerByProfessionDto
+            {
+                FullName = w.User.Name,
+                Bio = w.User.Bio,
+                Location = w.Address,
+                AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0,
+                ExperienceYears = w.Experience
+            }).ToList();
+
+            return result;
+        }
+        
+        public async Task<List<WorkerByProfessionDto>> SearchWorkersByNameAsync(string name)
+        {
+            var workers = await _context.Workers
+                .Include(w => w.User)
+                .Include(w => w.Ratings)
+                .Where(w => w.User.Name.ToLower().Contains(name.ToLower()))
+                .ToListAsync();
+
+            var result = workers.Select(w => new WorkerByProfessionDto
+            {
+                FullName = w.User.Name,
+                Bio = w.User.Bio,
+                Location = w.Address,
+                AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0,
+                ExperienceYears = w.Experience
+            }).ToList();
+
+            return result;
         }
     }
 }

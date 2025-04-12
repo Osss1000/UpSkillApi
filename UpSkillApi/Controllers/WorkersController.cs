@@ -22,5 +22,14 @@ namespace UpSkillApi.Controllers
             var workers = await _workerRepository.GetWorkersByProfessionAsync(profession);
             return Ok(workers);
         }
+        
+        [HttpGet("search")]
+        public async Task<ActionResult<List<WorkerByProfessionDto>>> SearchWorkers([FromQuery] string name)
+        {
+            var results = await _workerRepository.SearchWorkersByNameAsync(name);
+            return Ok(results);
+        }
     }
+    
+    
 }

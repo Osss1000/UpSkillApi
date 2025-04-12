@@ -12,7 +12,7 @@ public partial class Organization
     public string? DocumentationPath { get; set; }
 
     public int OrganizationRole { get; set; }
-
+//test commit
     public int UserId { get; set; }
 
     public DateTime CreatedDate { get; set; }
