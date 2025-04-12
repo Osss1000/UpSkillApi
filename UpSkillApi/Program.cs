@@ -22,6 +22,8 @@ public class Program
         // Register repository directly
         builder.Services.AddScoped<ProfessionRepository>();
         builder.Services.AddScoped<WorkerRepository>();
+        builder.Services.AddScoped<AdvertisementRepository>();
+        builder.Services.AddScoped<UserRepository>();
 
         var app = builder.Build();
 
