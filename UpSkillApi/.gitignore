@@ -1,0 +1,15 @@
+# Build folders
+bin/
+obj/
+
+# Rider project settings
+.idea/
+*.user
+
+# Build cache files
+*.cache
+*.log
+*.dll
+*.pdb
+*.tmp
+*.csproj.user

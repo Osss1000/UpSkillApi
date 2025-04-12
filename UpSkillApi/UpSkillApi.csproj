@@ -20,4 +20,14 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="obj\Debug\net8.0\ApiEndpoints.json" />
+      <Content Include="obj\Debug\net8.0\apphost.exe" />
+      <Content Include="obj\Debug\net8.0\staticwebassets.build.endpoints.json" />
+      <Content Include="obj\Debug\net8.0\staticwebassets.references.upToDateCheck.txt" />
+      <Content Include="obj\Debug\net8.0\staticwebassets.removed.txt" />
+      <Content Include="obj\Debug\net8.0\UpSkillApi.csproj.BuildWithSkipAnalyzers" />
+      <Content Include="obj\Debug\net8.0\UpSkillApi.sourcelink.json" />
+    </ItemGroup>
+
 </Project>
