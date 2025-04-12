@@ -29,6 +29,24 @@ namespace UpSkillApi.Controllers
             var results = await _workerRepository.SearchWorkersByNameAsync(name);
             return Ok(results);
         }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<WorkerProfileDto>> GetWorkerProfile(int id)
+        {
+            var profile = await _workerRepository.GetWorkerProfileByIdAsync(id);
+
+            if (profile == null)
+                return NotFound();
+
+            return Ok(profile);
+        }
+        
+        [HttpGet("filter")]
+        public async Task<ActionResult<List<WorkerByProfessionDto>>> FilterWorkers([FromQuery] WorkerFilterDto filter)
+        {
+            var workers = await _workerRepository.FilterWorkersAsync(filter);
+            return Ok(workers);
+        }
     }
     
     

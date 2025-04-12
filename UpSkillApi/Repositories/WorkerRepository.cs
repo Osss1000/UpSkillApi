@@ -52,5 +52,78 @@ namespace UpSkillApi.Repositories
 
             return result;
         }
+        
+        public async Task<WorkerProfileDto?> GetWorkerProfileByIdAsync(int workerId)
+        {
+            var worker = await _context.Workers
+                .Include(w => w.User)
+                .Include(w => w.Ratings)
+                .ThenInclude(r => r.Client)
+                .ThenInclude(c => c.User)
+                .FirstOrDefaultAsync(w => w.WorkerId == workerId);
+
+            if (worker == null)
+                return null;
+
+            var profile = new WorkerProfileDto
+            {
+                FullName = worker.User.Name,
+                Bio = worker.User.Bio,
+                Profession = worker.Profession,
+                ExperienceYears = worker.Experience,
+                PhoneNumber = worker.User.PhoneNumber,
+                Address = worker.Address,
+                AverageRating = worker.Ratings.Any() ? worker.Ratings.Average(r => r.Score) : 0,
+
+                // Future: ProfileImagePath = worker.ProfileImagePath,
+                // Future: WorkImages = worker.WorkImages.Select(img => img.Path).ToList(),
+
+                Ratings = worker.Ratings.Select(r => new RatingDto
+                {
+                    ClientName = r.Client?.User?.Name ?? "Unknown",
+                    Score = r.Score,
+                    Comment = r.Comment
+                }).ToList()
+            };
+
+            return profile;
+        }
+        
+        public async Task<List<WorkerByProfessionDto>> FilterWorkersAsync(WorkerFilterDto filter)
+        {
+            var workersQuery = _context.Workers
+                .Include(w => w.User)
+                .Include(w => w.Ratings)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filter.Address))
+                workersQuery = workersQuery.Where(w => w.Address.Contains(filter.Address));
+
+            if (!string.IsNullOrWhiteSpace(filter.Profession))
+                workersQuery = workersQuery.Where(w => w.Profession == filter.Profession);
+
+            if (filter.MinPrice.HasValue)
+                workersQuery = workersQuery.Where(w => w.HourlyRate >= filter.MinPrice);
+
+            if (filter.MaxPrice.HasValue)
+                workersQuery = workersQuery.Where(w => w.HourlyRate <= filter.MaxPrice);
+
+            var workers = await workersQuery.ToListAsync();
+
+            var filtered = workers
+                .Where(w => !filter.MinRating.HasValue || 
+                            (w.Ratings.Any() && w.Ratings.Average(r => r.Score) >= filter.MinRating))
+                .Select(w => new WorkerByProfessionDto
+                {
+                    FullName = w.User.Name,
+                    Bio = w.User.Bio,
+                    Location = w.Address,
+                    ExperienceYears = w.Experience,
+                    AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0
+                })
+                .ToList();
+
+            return filtered;
+        }
     }
 }
