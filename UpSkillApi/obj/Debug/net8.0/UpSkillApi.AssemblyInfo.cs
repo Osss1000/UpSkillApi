@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UpSkillApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b184a1d96a1f4b4c840c841ce1148845cd009adf")]
 [assembly: System.Reflection.AssemblyProductAttribute("UpSkillApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UpSkillApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
