@@ -19,10 +19,21 @@ public class Program
         builder.Services.AddDbContext<UpSkillDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-        // Register repository directly
+        // Register repositories
         builder.Services.AddScoped<WorkerRepository>();
         builder.Services.AddScoped<AdvertisementRepository>();
         builder.Services.AddScoped<UserRepository>();
+
+        // ✅ Enable CORS
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
 
         var app = builder.Build();
 
@@ -34,6 +45,9 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        // ✅ Use CORS before authorization
+        app.UseCors("AllowAll");
 
         app.UseAuthorization();
 

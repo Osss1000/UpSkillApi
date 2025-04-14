@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UpSkillApi.Data;
 
@@ -11,9 +12,11 @@ using UpSkillApi.Data;
 namespace UpSkillApi.Migrations
 {
     [DbContext(typeof(UpSkillDbContext))]
-    partial class UpSkillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250413193557_finalupdateISA222")]
+    partial class finalupdateISA222
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,21 +99,21 @@ namespace UpSkillApi.Migrations
                         new
                         {
                             ApplicationStatusId = 1,
-                            CreatedDate = new DateTime(2025, 4, 13, 21, 3, 20, 989, DateTimeKind.Utc).AddTicks(7820),
+                            CreatedDate = new DateTime(2025, 4, 13, 19, 35, 57, 396, DateTimeKind.Utc).AddTicks(8130),
                             Description = "Awaiting review",
                             Status = 1
                         },
                         new
                         {
                             ApplicationStatusId = 2,
-                            CreatedDate = new DateTime(2025, 4, 13, 21, 3, 20, 989, DateTimeKind.Utc).AddTicks(7820),
+                            CreatedDate = new DateTime(2025, 4, 13, 19, 35, 57, 396, DateTimeKind.Utc).AddTicks(8130),
                             Description = "Application accepted",
                             Status = 2
                         },
                         new
                         {
                             ApplicationStatusId = 3,
-                            CreatedDate = new DateTime(2025, 4, 13, 21, 3, 20, 989, DateTimeKind.Utc).AddTicks(7820),
+                            CreatedDate = new DateTime(2025, 4, 13, 19, 35, 57, 396, DateTimeKind.Utc).AddTicks(8140),
                             Description = "Application denied",
                             Status = 3
                         });

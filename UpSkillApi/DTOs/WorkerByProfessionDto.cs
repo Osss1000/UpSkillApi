@@ -9,5 +9,8 @@ namespace UpSkillApi.DTOs
         public string Location { get; set; }
         public double? AverageRating { get; set; }
         public int? ExperienceYears { get; set; }
+
+        // 👇 New field
+        public string ProfessionName { get; set; }
     }
 }

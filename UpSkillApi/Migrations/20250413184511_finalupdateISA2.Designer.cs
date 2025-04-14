@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UpSkillApi.Data;
 
@@ -11,9 +12,11 @@ using UpSkillApi.Data;
 namespace UpSkillApi.Migrations
 {
     [DbContext(typeof(UpSkillDbContext))]
-    partial class UpSkillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250413184511_finalupdateISA2")]
+    partial class finalupdateISA2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,21 +99,21 @@ namespace UpSkillApi.Migrations
                         new
                         {
                             ApplicationStatusId = 1,
-                            CreatedDate = new DateTime(2025, 4, 13, 21, 3, 20, 989, DateTimeKind.Utc).AddTicks(7820),
+                            CreatedDate = new DateTime(2025, 4, 13, 18, 45, 10, 922, DateTimeKind.Utc).AddTicks(6780),
                             Description = "Awaiting review",
                             Status = 1
                         },
                         new
                         {
                             ApplicationStatusId = 2,
-                            CreatedDate = new DateTime(2025, 4, 13, 21, 3, 20, 989, DateTimeKind.Utc).AddTicks(7820),
+                            CreatedDate = new DateTime(2025, 4, 13, 18, 45, 10, 922, DateTimeKind.Utc).AddTicks(6780),
                             Description = "Application accepted",
                             Status = 2
                         },
                         new
                         {
                             ApplicationStatusId = 3,
-                            CreatedDate = new DateTime(2025, 4, 13, 21, 3, 20, 989, DateTimeKind.Utc).AddTicks(7820),
+                            CreatedDate = new DateTime(2025, 4, 13, 18, 45, 10, 922, DateTimeKind.Utc).AddTicks(6780),
                             Description = "Application denied",
                             Status = 3
                         });
@@ -130,8 +133,14 @@ namespace UpSkillApi.Migrations
                     b.Property<string>("BackNationalIdPath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FrontNationalIdPath")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NationalId")
                         .IsRequired()
@@ -221,12 +230,18 @@ namespace UpSkillApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrganizationId"));
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("DocumentationPath")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -681,6 +696,9 @@ namespace UpSkillApi.Migrations
                     b.Property<string>("ClearanceCertificatePath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("Experience")
                         .HasColumnType("int");
 
@@ -689,6 +707,9 @@ namespace UpSkillApi.Migrations
 
                     b.Property<decimal?>("HourlyRate")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NationalId")
                         .IsRequired()

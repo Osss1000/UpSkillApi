@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UpSkillApi.Data;
 
@@ -11,9 +12,11 @@ using UpSkillApi.Data;
 namespace UpSkillApi.Migrations
 {
     [DbContext(typeof(UpSkillDbContext))]
-    partial class UpSkillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250413152907_SeedApplicationStatuses")]
+    partial class SeedApplicationStatuses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,7 +65,7 @@ namespace UpSkillApi.Migrations
 
                     b.HasKey("AdvertisementId");
 
-                    b.HasIndex("SponsorId");
+                    b.HasIndex(new[] { "SponsorId" }, "IX_Advertisements_SponsorId");
 
                     b.ToTable("Advertisements");
                 });
@@ -96,21 +99,21 @@ namespace UpSkillApi.Migrations
                         new
                         {
                             ApplicationStatusId = 1,
-                            CreatedDate = new DateTime(2025, 4, 13, 21, 3, 20, 989, DateTimeKind.Utc).AddTicks(7820),
+                            CreatedDate = new DateTime(2025, 4, 13, 15, 29, 7, 171, DateTimeKind.Utc).AddTicks(4890),
                             Description = "Awaiting review",
                             Status = 1
                         },
                         new
                         {
                             ApplicationStatusId = 2,
-                            CreatedDate = new DateTime(2025, 4, 13, 21, 3, 20, 989, DateTimeKind.Utc).AddTicks(7820),
+                            CreatedDate = new DateTime(2025, 4, 13, 15, 29, 7, 171, DateTimeKind.Utc).AddTicks(4890),
                             Description = "Application accepted",
                             Status = 2
                         },
                         new
                         {
                             ApplicationStatusId = 3,
-                            CreatedDate = new DateTime(2025, 4, 13, 21, 3, 20, 989, DateTimeKind.Utc).AddTicks(7820),
+                            CreatedDate = new DateTime(2025, 4, 13, 15, 29, 7, 171, DateTimeKind.Utc).AddTicks(4890),
                             Description = "Application denied",
                             Status = 3
                         });
@@ -130,8 +133,14 @@ namespace UpSkillApi.Migrations
                     b.Property<string>("BackNationalIdPath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FrontNationalIdPath")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NationalId")
                         .IsRequired()
@@ -142,10 +151,10 @@ namespace UpSkillApi.Migrations
 
                     b.HasKey("ClientId");
 
-                    b.HasIndex("NationalId")
+                    b.HasIndex(new[] { "NationalId" }, "IX_Clients_NationalId")
                         .IsUnique();
 
-                    b.HasIndex("UserId")
+                    b.HasIndex(new[] { "UserId" }, "IX_Clients_UserId")
                         .IsUnique();
 
                     b.ToTable("Clients");
@@ -183,11 +192,8 @@ namespace UpSkillApi.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PostStatusId")
-                        .HasColumnType("int");
-
                     b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Profession")
                         .IsRequired()
@@ -204,11 +210,9 @@ namespace UpSkillApi.Migrations
 
                     b.HasKey("ClientPostId");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex(new[] { "ClientId" }, "IX_ClientPosts_ClientId");
 
-                    b.HasIndex("PostStatusId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "UserId" }, "IX_ClientPosts_UserId");
 
                     b.ToTable("ClientPosts");
                 });
@@ -221,12 +225,18 @@ namespace UpSkillApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrganizationId"));
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("DocumentationPath")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -239,7 +249,7 @@ namespace UpSkillApi.Migrations
 
                     b.HasKey("OrganizationId");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex(new[] { "UserId" }, "IX_Organizations_UserId")
                         .IsUnique();
 
                     b.ToTable("Organizations");
@@ -279,11 +289,8 @@ namespace UpSkillApi.Migrations
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PostStatusId")
-                        .HasColumnType("int");
-
                     b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -292,46 +299,9 @@ namespace UpSkillApi.Migrations
 
                     b.HasKey("PaidJobId");
 
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("PostStatusId");
+                    b.HasIndex(new[] { "OrganizationId" }, "IX_PaidJobs_OrganizationId");
 
                     b.ToTable("PaidJobs");
-                });
-
-            modelBuilder.Entity("UpSkillApi.Models.PostStatus", b =>
-                {
-                    b.Property<int>("PostStatusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PostStatusId"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("PostStatusId");
-
-                    b.ToTable("PostStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            PostStatusId = 1,
-                            Description = "The post is publicly visible",
-                            Name = "Posted"
-                        },
-                        new
-                        {
-                            PostStatusId = 2,
-                            Description = "The job is completed or closed",
-                            Name = "Done"
-                        });
                 });
 
             modelBuilder.Entity("UpSkillApi.Models.Profession", b =>
@@ -477,9 +447,9 @@ namespace UpSkillApi.Migrations
 
                     b.HasKey("RatingId");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex(new[] { "ClientId" }, "IX_Ratings_ClientId");
 
-                    b.HasIndex("WorkerId");
+                    b.HasIndex(new[] { "WorkerId" }, "IX_Ratings_WorkerId");
 
                     b.ToTable("Ratings");
                 });
@@ -497,7 +467,8 @@ namespace UpSkillApi.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -510,10 +481,12 @@ namespace UpSkillApi.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -560,7 +533,7 @@ namespace UpSkillApi.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("Email")
+                    b.HasIndex(new[] { "Email" }, "IX_Users_Email")
                         .IsUnique();
 
                     b.ToTable("Users");
@@ -600,13 +573,13 @@ namespace UpSkillApi.Migrations
 
                     b.HasKey("VolunteeringApplicationId");
 
-                    b.HasIndex("ApplicationStatusId");
+                    b.HasIndex(new[] { "ApplicationStatusId" }, "IX_VolunteeringApplications_ApplicationStatusId");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex(new[] { "ClientId" }, "IX_VolunteeringApplications_ClientId");
 
-                    b.HasIndex("VolunteeringJobId");
+                    b.HasIndex(new[] { "VolunteeringJobId" }, "IX_VolunteeringApplications_VolunteeringJobId");
 
-                    b.HasIndex("WorkerId");
+                    b.HasIndex(new[] { "WorkerId" }, "IX_VolunteeringApplications_WorkerId");
 
                     b.ToTable("VolunteeringApplications");
                 });
@@ -645,9 +618,6 @@ namespace UpSkillApi.Migrations
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PostStatusId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -655,11 +625,9 @@ namespace UpSkillApi.Migrations
 
                     b.HasKey("VolunteeringJobId");
 
-                    b.HasIndex("ApplicationStatusId");
+                    b.HasIndex(new[] { "ApplicationStatusId" }, "IX_VolunteeringJobs_ApplicationStatusId");
 
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("PostStatusId");
+                    b.HasIndex(new[] { "OrganizationId" }, "IX_VolunteeringJobs_OrganizationId");
 
                     b.ToTable("VolunteeringJobs");
                 });
@@ -681,6 +649,9 @@ namespace UpSkillApi.Migrations
                     b.Property<string>("ClearanceCertificatePath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("Experience")
                         .HasColumnType("int");
 
@@ -688,7 +659,10 @@ namespace UpSkillApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("HourlyRate")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NationalId")
                         .IsRequired()
@@ -702,12 +676,12 @@ namespace UpSkillApi.Migrations
 
                     b.HasKey("WorkerId");
 
-                    b.HasIndex("NationalId")
-                        .IsUnique();
-
                     b.HasIndex("ProfessionId");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex(new[] { "NationalId" }, "IX_Workers_NationalId")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "UserId" }, "IX_Workers_UserId")
                         .IsUnique();
 
                     b.ToTable("Workers");
@@ -749,13 +723,13 @@ namespace UpSkillApi.Migrations
 
                     b.HasKey("WorkerApplicationId");
 
-                    b.HasIndex("ApplicationStatusId");
+                    b.HasIndex(new[] { "ApplicationStatusId" }, "IX_WorkerApplications_ApplicationStatusId");
 
-                    b.HasIndex("ClientPostId");
+                    b.HasIndex(new[] { "ClientPostId" }, "IX_WorkerApplications_ClientPostId");
 
-                    b.HasIndex("PaidJobId");
+                    b.HasIndex(new[] { "PaidJobId" }, "IX_WorkerApplications_PaidJobId");
 
-                    b.HasIndex("WorkerId");
+                    b.HasIndex(new[] { "WorkerId" }, "IX_WorkerApplications_WorkerId");
 
                     b.ToTable("WorkerApplications");
                 });
@@ -765,7 +739,6 @@ namespace UpSkillApi.Migrations
                     b.HasOne("UpSkillApi.Models.Sponsor", "Sponsor")
                         .WithMany("Advertisements")
                         .HasForeignKey("SponsorId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Sponsor");
@@ -776,7 +749,7 @@ namespace UpSkillApi.Migrations
                     b.HasOne("UpSkillApi.Models.User", "User")
                         .WithOne("Client")
                         .HasForeignKey("UpSkillApi.Models.Client", "UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -787,24 +760,15 @@ namespace UpSkillApi.Migrations
                     b.HasOne("UpSkillApi.Models.Client", "Client")
                         .WithMany("ClientPosts")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("UpSkillApi.Models.PostStatus", "PostStatus")
-                        .WithMany("ClientPosts")
-                        .HasForeignKey("PostStatusId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("UpSkillApi.Models.User", "User")
                         .WithMany("ClientPosts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");
-
-                    b.Navigation("PostStatus");
 
                     b.Navigation("User");
                 });
@@ -814,7 +778,7 @@ namespace UpSkillApi.Migrations
                     b.HasOne("UpSkillApi.Models.User", "User")
                         .WithOne("Organization")
                         .HasForeignKey("UpSkillApi.Models.Organization", "UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -825,18 +789,9 @@ namespace UpSkillApi.Migrations
                     b.HasOne("UpSkillApi.Models.Organization", "Organization")
                         .WithMany("PaidJobs")
                         .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("UpSkillApi.Models.PostStatus", "PostStatus")
-                        .WithMany("PaidJobs")
-                        .HasForeignKey("PostStatusId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Organization");
-
-                    b.Navigation("PostStatus");
                 });
 
             modelBuilder.Entity("UpSkillApi.Models.Rating", b =>
@@ -844,13 +799,11 @@ namespace UpSkillApi.Migrations
                     b.HasOne("UpSkillApi.Models.Client", "Client")
                         .WithMany("Ratings")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("UpSkillApi.Models.Worker", "Worker")
                         .WithMany("Ratings")
                         .HasForeignKey("WorkerId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -863,24 +816,21 @@ namespace UpSkillApi.Migrations
                     b.HasOne("UpSkillApi.Models.ApplicationStatus", "ApplicationStatus")
                         .WithMany("VolunteeringApplications")
                         .HasForeignKey("ApplicationStatusId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("UpSkillApi.Models.Client", "Client")
                         .WithMany("VolunteeringApplications")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("ClientId");
 
                     b.HasOne("UpSkillApi.Models.VolunteeringJob", "VolunteeringJob")
                         .WithMany("VolunteeringApplications")
                         .HasForeignKey("VolunteeringJobId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("UpSkillApi.Models.Worker", "Worker")
                         .WithMany("VolunteeringApplications")
-                        .HasForeignKey("WorkerId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("WorkerId");
 
                     b.Navigation("ApplicationStatus");
 
@@ -896,26 +846,17 @@ namespace UpSkillApi.Migrations
                     b.HasOne("UpSkillApi.Models.ApplicationStatus", "ApplicationStatus")
                         .WithMany("VolunteeringJobs")
                         .HasForeignKey("ApplicationStatusId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("UpSkillApi.Models.Organization", "Organization")
                         .WithMany("VolunteeringJobs")
                         .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("UpSkillApi.Models.PostStatus", "PostStatus")
-                        .WithMany("VolunteeringJobs")
-                        .HasForeignKey("PostStatusId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ApplicationStatus");
 
                     b.Navigation("Organization");
-
-                    b.Navigation("PostStatus");
                 });
 
             modelBuilder.Entity("UpSkillApi.Models.Worker", b =>
@@ -923,13 +864,13 @@ namespace UpSkillApi.Migrations
                     b.HasOne("UpSkillApi.Models.Profession", "Profession")
                         .WithMany("Workers")
                         .HasForeignKey("ProfessionId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("UpSkillApi.Models.User", "User")
                         .WithOne("Worker")
                         .HasForeignKey("UpSkillApi.Models.Worker", "UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Profession");
@@ -942,23 +883,20 @@ namespace UpSkillApi.Migrations
                     b.HasOne("UpSkillApi.Models.ApplicationStatus", "ApplicationStatus")
                         .WithMany("WorkerApplications")
                         .HasForeignKey("ApplicationStatusId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("UpSkillApi.Models.ClientPost", "ClientPost")
                         .WithMany("WorkerApplications")
-                        .HasForeignKey("ClientPostId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("ClientPostId");
 
                     b.HasOne("UpSkillApi.Models.PaidJob", "PaidJob")
                         .WithMany("WorkerApplications")
-                        .HasForeignKey("PaidJobId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("PaidJobId");
 
                     b.HasOne("UpSkillApi.Models.Worker", "Worker")
                         .WithMany("WorkerApplications")
                         .HasForeignKey("WorkerId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ApplicationStatus");
@@ -1003,15 +941,6 @@ namespace UpSkillApi.Migrations
             modelBuilder.Entity("UpSkillApi.Models.PaidJob", b =>
                 {
                     b.Navigation("WorkerApplications");
-                });
-
-            modelBuilder.Entity("UpSkillApi.Models.PostStatus", b =>
-                {
-                    b.Navigation("ClientPosts");
-
-                    b.Navigation("PaidJobs");
-
-                    b.Navigation("VolunteeringJobs");
                 });
 
             modelBuilder.Entity("UpSkillApi.Models.Profession", b =>

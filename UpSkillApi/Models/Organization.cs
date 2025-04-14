@@ -1,7 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace UpSkillApi.Models;
+
+public enum OrganizationRoleEnum
+{
+    ForProfit = 1,
+    Voluntary = 2
+}
 
 public partial class Organization
 {
@@ -11,13 +18,16 @@ public partial class Organization
 
     public string? DocumentationPath { get; set; }
 
-    public int OrganizationRole { get; set; }
-//test commit
+    public int OrganizationRole { get; set; }  // Stored as int in DB
+
+    [NotMapped]
+    public OrganizationRoleEnum OrganizationRoleEnum
+    {
+        get => (OrganizationRoleEnum)OrganizationRole;
+        set => OrganizationRole = (int)value;
+    }
+
     public int UserId { get; set; }
-
-    public DateTime CreatedDate { get; set; }
-
-    public DateTime? ModifiedDate { get; set; }
 
     public string? Name { get; set; }
 
