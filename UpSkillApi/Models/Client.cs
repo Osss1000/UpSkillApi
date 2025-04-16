@@ -14,11 +14,7 @@ public partial class Client
     public string? BackNationalIdPath { get; set; }
 
     public int UserId { get; set; }
-
-    public DateTime CreatedDate { get; set; }
-
-    public DateTime? ModifiedDate { get; set; }
-
+    
     public string? Address { get; set; }
 
     public virtual ICollection<ClientPost> ClientPosts { get; set; } = new List<ClientPost>();

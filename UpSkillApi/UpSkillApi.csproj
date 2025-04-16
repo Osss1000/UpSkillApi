@@ -30,4 +30,8 @@
       <Content Include="obj\Debug\net8.0\UpSkillApi.sourcelink.json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\uploads\nationalIds\" />
+    </ItemGroup>
+
 </Project>

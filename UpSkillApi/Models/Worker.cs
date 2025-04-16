@@ -17,11 +17,7 @@ public partial class Worker
     public string? ClearanceCertificatePath { get; set; }
 
     public int UserId { get; set; }
-
-    public DateTime CreatedDate { get; set; }
-
-    public DateTime? ModifiedDate { get; set; }
-
+    
     public string? Address { get; set; }
 
     public decimal? HourlyRate { get; set; }

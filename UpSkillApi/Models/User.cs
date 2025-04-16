@@ -9,7 +9,9 @@ public partial class User
 
     public string Name { get; set; } = null!;
     public string? Bio { get; set; }
-
+    //For Auth
+    public byte[] PasswordHash { get; set; }
+    public byte[] PasswordSalt { get; set; }
     public string Email { get; set; } = null!;
 
     public string Role { get; set; } = null!;

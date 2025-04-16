@@ -28,18 +28,20 @@ namespace UpSkillApi.Repositories
                 Bio = w.User.Bio,
                 Location = w.Address,
                 ExperienceYears = w.Experience,
-                AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0
+                AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0,
+                ProfessionName = w.Profession.Name
             }).ToList();
 
             return result;
         }
-
-        public async Task<List<WorkerByProfessionDto>> SearchWorkersByNameAsync(string name)
+        public async Task<List<WorkerByProfessionDto>> SearchWorkersByNameAsync(string name, string professionName)
         {
             var workers = await _context.Workers
                 .Include(w => w.User)
                 .Include(w => w.Ratings)
-                .Where(w => w.User.Name.ToLower().Contains(name.ToLower()))
+                .Include(w => w.Profession)
+                .Where(w => w.User.Name.ToLower().Contains(name.ToLower()) &&
+                            w.Profession.Name.ToLower() == professionName.ToLower())
                 .ToListAsync();
 
             var result = workers.Select(w => new WorkerByProfessionDto
@@ -48,7 +50,8 @@ namespace UpSkillApi.Repositories
                 Bio = w.User.Bio,
                 Location = w.Address,
                 AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0,
-                ExperienceYears = w.Experience
+                ExperienceYears = w.Experience,
+                ProfessionName = w.Profession.Name
             }).ToList();
 
             return result;
@@ -96,15 +99,14 @@ namespace UpSkillApi.Repositories
             var workersQuery = _context.Workers
                 .Include(w => w.User)
                 .Include(w => w.Ratings)
+                .Include(w => w.Profession)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(filter.Address))
                 workersQuery = workersQuery.Where(w => w.Address.Contains(filter.Address));
 
             if (!string.IsNullOrWhiteSpace(filter.Profession))
-                workersQuery = workersQuery
-                    .Include(w => w.Profession)
-                    .Where(w => w.Profession.Name == filter.Profession);
+                workersQuery = workersQuery.Where(w => w.Profession.Name == filter.Profession);
 
             if (filter.MinPrice.HasValue)
                 workersQuery = workersQuery.Where(w => w.HourlyRate >= filter.MinPrice);
@@ -123,7 +125,8 @@ namespace UpSkillApi.Repositories
                     Bio = w.User.Bio,
                     Location = w.Address,
                     ExperienceYears = w.Experience,
-                    AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0
+                    AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0,
+                    ProfessionName = w.Profession.Name
                 })
                 .ToList();
 
