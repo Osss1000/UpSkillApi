@@ -23,6 +23,8 @@ public class Program
         builder.Services.AddScoped<WorkerRepository>();
         builder.Services.AddScoped<AdvertisementRepository>();
         builder.Services.AddScoped<UserRepository>();
+        builder.Services.AddScoped<AuthRepository>();
+
 
         // ✅ Enable CORS
         builder.Services.AddCors(options =>

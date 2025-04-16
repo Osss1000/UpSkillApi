@@ -34,14 +34,14 @@ namespace UpSkillApi.Repositories
 
             return result;
         }
-
-        public async Task<List<WorkerByProfessionDto>> SearchWorkersByNameAsync(string name)
+        public async Task<List<WorkerByProfessionDto>> SearchWorkersByNameAsync(string name, string professionName)
         {
             var workers = await _context.Workers
                 .Include(w => w.User)
                 .Include(w => w.Ratings)
                 .Include(w => w.Profession)
-                .Where(w => w.User.Name.ToLower().Contains(name.ToLower()))
+                .Where(w => w.User.Name.ToLower().Contains(name.ToLower()) &&
+                            w.Profession.Name.ToLower() == professionName.ToLower())
                 .ToListAsync();
 
             var result = workers.Select(w => new WorkerByProfessionDto
