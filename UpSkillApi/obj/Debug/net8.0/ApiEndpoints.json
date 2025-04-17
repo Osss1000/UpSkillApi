@@ -1,86 +1,8 @@
 [
   {
-    "ContainingType": "UpSkillApi.Controllers.MarkedController",
-    "Method": "MarkAsCompleted",
-    "RelativePath": "api/Marked/put",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "postId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "UpSkillApi.Controllers.postdetailsController",
-    "Method": "GetAllMarkedPosts",
-    "RelativePath": "api/postdetails",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.List\u00601[[UpSkillApi.Models.ClientPost, UpSkillApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "UpSkillApi.Controllers.postdetailsController",
-    "Method": "Post",
-    "RelativePath": "api/postdetails",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "post",
-        "Type": "UpSkillApi.Models.ClientPost",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "UpSkillApi.Controllers.postdetailsController",
-    "Method": "GetById",
-    "RelativePath": "api/postdetails/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "UpSkillApi.Models.ClientPost",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "UpSkillApi.Controllers.postdetailsController",
-    "Method": "Delete",
-    "RelativePath": "api/postdetails/delete",
+    "ContainingType": "UpSkillApi.Controllers.AnterController",
+    "Method": "anDeletePost",
+    "RelativePath": "delete",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -94,185 +16,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "UpSkillApi.Controllers.postdetailsController",
-    "Method": "Put",
-    "RelativePath": "api/postdetails/put",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "post",
-        "Type": "UpSkillApi.Models.ClientPost",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "UpSkillApi.Controllers.ProfessionsController",
-    "Method": "GetProfessions",
-    "RelativePath": "api/Professions",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.List\u00601[[UpSkillApi.DTOs.ProfessionDto, UpSkillApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "UpSkillApi.Controllers.ProfileDetails_cController",
-    "Method": "GetprofileDetails",
-    "RelativePath": "api/ProfileDetails_c/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "UpSkillApi.Models.User",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "UpSkillApi.Controllers.ProfileDetails_vORGController",
-    "Method": "GetprofileDetails",
-    "RelativePath": "api/ProfileDetails_vORG/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "UpSkillApi.Models.User",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "UpSkillApi.Controllers.SettingsController",
-    "Method": "Put",
-    "RelativePath": "api/Settings/putAddress/{id}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "newuser",
-        "Type": "UpSkillApi.Models.Client",
-        "IsRequired": true
-      },
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "UpSkillApi.Controllers.SettingsController",
-    "Method": "PutPassword",
-    "RelativePath": "api/Settings/putPassword/{id}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "newuser",
-        "Type": "UpSkillApi.Models.User",
-        "IsRequired": true
-      },
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "UpSkillApi.Controllers.V_postController",
-    "Method": "GetAll",
-    "RelativePath": "api/V_post",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.List\u00601[[UpSkillApi.Models.VolunteeringJob, UpSkillApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "UpSkillApi.Controllers.V_postController",
-    "Method": "GetById",
-    "RelativePath": "api/V_post/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "UpSkillApi.Models.VolunteeringJob",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "UpSkillApi.Controllers.V_searchController",
-    "Method": "GetByName",
-    "RelativePath": "api/V_search/organization/{name}",
+    "ContainingType": "UpSkillApi.Controllers.AnterController",
+    "Method": "anGetByName",
+    "RelativePath": "organization/{name}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -296,22 +42,22 @@
     ]
   },
   {
-    "ContainingType": "UpSkillApi.Controllers.WorkersController",
-    "Method": "GetWorkersByProfession",
-    "RelativePath": "api/Workers/profession/{profession}",
+    "ContainingType": "UpSkillApi.Controllers.AnterController",
+    "Method": "anGetOrganizationProfileDetails",
+    "RelativePath": "ORGdetails/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "profession",
-        "Type": "System.String",
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.List\u00601[[UpSkillApi.DTOs.WorkerByProfessionDto, UpSkillApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "UpSkillApi.Models.User",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -320,5 +66,157 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "UpSkillApi.Controllers.AnterController",
+    "Method": "anGetById",
+    "RelativePath": "ORGpost/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "UpSkillApi.Models.VolunteeringJob",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "UpSkillApi.Controllers.AnterController",
+    "Method": "anGetPostsById",
+    "RelativePath": "Post/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "UpSkillApi.Models.ClientPost",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "UpSkillApi.Controllers.AnterController",
+    "Method": "anGetprofileDetails",
+    "RelativePath": "ProfileDetails/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "UpSkillApi.Models.User",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "UpSkillApi.Controllers.AnterController",
+    "Method": "anPutPost",
+    "RelativePath": "put",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "post",
+        "Type": "UpSkillApi.Models.ClientPost",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "UpSkillApi.Controllers.AnterController",
+    "Method": "anPutAddress",
+    "RelativePath": "putAddress/{id}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userFromRequest",
+        "Type": "UpSkillApi.Models.Client",
+        "IsRequired": true
+      },
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "UpSkillApi.Controllers.AnterController",
+    "Method": "anPutPassword",
+    "RelativePath": "putPassword/{id}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userFromRequest",
+        "Type": "UpSkillApi.Models.User",
+        "IsRequired": true
+      },
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "UpSkillApi.Controllers.AnterController",
+    "Method": "anMarkAsCompleted",
+    "RelativePath": "PutPostAsCompleted",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "postId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

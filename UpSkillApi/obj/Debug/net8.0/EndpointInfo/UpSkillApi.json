@@ -5,10 +5,10 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Marked/put": {
+    "/PutPostAsCompleted": {
       "post": {
         "tags": [
-          "Marked"
+          "Anter"
         ],
         "requestBody": {
           "content": {
@@ -39,77 +39,10 @@
         }
       }
     },
-    "/api/postdetails": {
+    "/Post/{id}": {
       "get": {
         "tags": [
-          "postdetails"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ClientPost"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ClientPost"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ClientPost"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "postdetails"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ClientPost"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ClientPost"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ClientPost"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/postdetails/{id}": {
-      "get": {
-        "tags": [
-          "postdetails"
+          "Anter"
         ],
         "parameters": [
           {
@@ -146,10 +79,10 @@
         }
       }
     },
-    "/api/postdetails/put": {
+    "/put": {
       "post": {
         "tags": [
-          "postdetails"
+          "Anter"
         ],
         "requestBody": {
           "content": {
@@ -177,10 +110,10 @@
         }
       }
     },
-    "/api/postdetails/delete": {
+    "/delete": {
       "post": {
         "tags": [
-          "postdetails"
+          "Anter"
         ],
         "requestBody": {
           "content": {
@@ -211,48 +144,10 @@
         }
       }
     },
-    "/api/Professions": {
+    "/ProfileDetails/{id}": {
       "get": {
         "tags": [
-          "Professions"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProfessionDto"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProfessionDto"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProfessionDto"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/ProfileDetails_c/{id}": {
-      "get": {
-        "tags": [
-          "ProfileDetails_c"
+          "Anter"
         ],
         "parameters": [
           {
@@ -289,10 +184,10 @@
         }
       }
     },
-    "/api/ProfileDetails_vORG/{id}": {
+    "/ORGdetails/{id}": {
       "get": {
         "tags": [
-          "ProfileDetails_vORG"
+          "Anter"
         ],
         "parameters": [
           {
@@ -329,10 +224,10 @@
         }
       }
     },
-    "/api/Settings/putAddress/{id}": {
+    "/putAddress/{id}": {
       "post": {
         "tags": [
-          "Settings"
+          "Anter"
         ],
         "parameters": [
           {
@@ -371,10 +266,10 @@
         }
       }
     },
-    "/api/Settings/putPassword/{id}": {
+    "/putPassword/{id}": {
       "post": {
         "tags": [
-          "Settings"
+          "Anter"
         ],
         "parameters": [
           {
@@ -413,48 +308,10 @@
         }
       }
     },
-    "/api/V_post": {
+    "/ORGpost/{id}": {
       "get": {
         "tags": [
-          "V_post"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VolunteeringJob"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VolunteeringJob"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VolunteeringJob"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/V_post/{id}": {
-      "get": {
-        "tags": [
-          "V_post"
+          "Anter"
         ],
         "parameters": [
           {
@@ -491,10 +348,10 @@
         }
       }
     },
-    "/api/V_search/organization/{name}": {
+    "/organization/{name}": {
       "get": {
         "tags": [
-          "V_search"
+          "Anter"
         ],
         "parameters": [
           {
@@ -523,54 +380,6 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Organization"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Workers/profession/{profession}": {
-      "get": {
-        "tags": [
-          "Workers"
-        ],
-        "parameters": [
-          {
-            "name": "profession",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WorkerByProfessionDto"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WorkerByProfessionDto"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WorkerByProfessionDto"
-                  }
                 }
               }
             }
@@ -884,16 +693,6 @@
             "items": {
               "$ref": "#/components/schemas/WorkerApplication"
             },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ProfessionDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
             "nullable": true
           }
         },
@@ -1257,36 +1056,6 @@
           },
           "worker": {
             "$ref": "#/components/schemas/Worker"
-          }
-        },
-        "additionalProperties": false
-      },
-      "WorkerByProfessionDto": {
-        "type": "object",
-        "properties": {
-          "fullName": {
-            "type": "string",
-            "nullable": true
-          },
-          "bio": {
-            "type": "string",
-            "nullable": true
-          },
-          "location": {
-            "type": "string",
-            "nullable": true
-          },
-          "rating": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Rating"
-            },
-            "nullable": true
-          },
-          "experienceYears": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
           }
         },
         "additionalProperties": false
