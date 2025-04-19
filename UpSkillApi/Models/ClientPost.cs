@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace UpSkillApi.Models;
@@ -24,4 +24,7 @@ public partial class ClientPost
     public virtual PostStatus PostStatus { get; set; } = null!;
     public virtual Client Client { get; set; } = null!;
     public virtual User User { get; set; } = null!;
-    public virtual ICollection<WorkerApplication> WorkerApplications { get; set; } = new List<WorkerApplication>();}
+    public virtual ICollection<WorkerApplication> WorkerApplications { get; set; } = new List<WorkerApplication>();
+    public bool IsCompleted { get; set; }
+    public DateTime CompletedAt { get; set; }
+}
