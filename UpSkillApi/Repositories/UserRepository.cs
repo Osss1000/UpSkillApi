@@ -45,10 +45,27 @@ namespace UpSkillApi.Repositories
 
         public async Task<bool> UpdateAddressAsync(UpdateAddressDto dto)
         {
-            var worker = await _context.Workers.FirstOrDefaultAsync(w => w.UserId == dto.UserId);
-            if (worker == null) return false;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == dto.UserId);
+            if (user == null) return false;
 
-            worker.Address = dto.Address;
+            switch (user.Role.ToLower())
+            {
+                case "worker":
+                    var worker = await _context.Workers.FirstOrDefaultAsync(w => w.UserId == dto.UserId);
+                    if (worker == null) return false;
+                    worker.Address = dto.Address;
+                    break;
+
+                case "client":
+                    var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserId == dto.UserId);
+                    if (client == null) return false;
+                    client.Address = dto.Address;
+                    break;
+                
+                default:
+                    return false; // Unknown role
+            }
+
             await _context.SaveChangesAsync();
             return true;
         }
