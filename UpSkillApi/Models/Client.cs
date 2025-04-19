@@ -24,4 +24,5 @@ public partial class Client
     public virtual User User { get; set; } = null!;
 
     public virtual ICollection<VolunteeringApplication> VolunteeringApplications { get; set; } = new List<VolunteeringApplication>();
+    public DateTime ModifiedDate { get; set; }
 }
