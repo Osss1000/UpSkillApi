@@ -1,6 +1,0 @@
-@UpSkillApi_HostAddress = http://localhost:5016
-
-GET {{UpSkillApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
