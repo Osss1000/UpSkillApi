@@ -25,7 +25,6 @@ namespace UpSkillApi.Repositories
             var result = workers.Select(w => new WorkerByProfessionDto
             {
                 WorkerId = w.WorkerId, // ✅ Fill the ID
-
                 FullName = w.User.Name,
                 Bio = w.User.Bio,
                 Location = w.Address,
