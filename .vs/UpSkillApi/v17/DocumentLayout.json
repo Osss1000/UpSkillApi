@@ -1,0 +1,75 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|c:\\users\\abdelrahman\\source\\new folder\\upskillapi\\upskillapi\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|solutionrelative:upskillapi\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|c:\\users\\abdelrahman\\source\\new folder\\upskillapi\\upskillapi\\controllers\\antercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|solutionrelative:upskillapi\\controllers\\antercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|c:\\users\\abdelrahman\\source\\new folder\\upskillapi\\upskillapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|solutionrelative:upskillapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\.gitignore",
+              "RelativeDocumentMoniker": "UpSkillApi\\.gitignore",
+              "ToolTip": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\.gitignore",
+              "RelativeToolTip": "UpSkillApi\\.gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-04-19T04:06:25.639Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AnterController.cs",
+              "DocumentMoniker": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\Controllers\\AnterController.cs",
+              "RelativeDocumentMoniker": "UpSkillApi\\Controllers\\AnterController.cs",
+              "ToolTip": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\Controllers\\AnterController.cs",
+              "RelativeToolTip": "UpSkillApi\\Controllers\\AnterController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-19T04:06:00.226Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\Program.cs",
+              "RelativeDocumentMoniker": "UpSkillApi\\Program.cs",
+              "ToolTip": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\Program.cs",
+              "RelativeToolTip": "UpSkillApi\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-19T04:05:47.295Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
