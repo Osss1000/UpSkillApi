@@ -1,15 +1,26 @@
-# Build folders
+# Build results
 bin/
 obj/
 
-# Rider project settings
-.idea/
+# User-specific files
+*.suo
 *.user
+*.userosscache
+*.sln.docstates
 
-# Build cache files
-*.cache
+# Visual Studio working folder
+.vs/
+
+# Rider IDE
+.idea/
+
+# ASP.NET
+*.db
+*.sqlite
 *.log
-*.dll
-*.pdb
-*.tmp
-*.csproj.user
+
+# Logs
+*.log
+
+# Others
+*.vsidx
