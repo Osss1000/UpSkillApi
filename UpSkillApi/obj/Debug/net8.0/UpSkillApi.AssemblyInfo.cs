@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UpSkillApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7fbc870414a8a1c1e649fb3e3e9c45d18918e21b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+53de0c2a50dae65590885835a55b0a2901635d5d")]
 [assembly: System.Reflection.AssemblyProductAttribute("UpSkillApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UpSkillApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

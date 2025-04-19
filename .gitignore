@@ -1,5 +1,9 @@
-bin/
-obj/
-Vs/
-Debug/
+# Ignore build and project files
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+*.vs/
 .vs/

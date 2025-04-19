@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using UpSkillApi.Data;
-using UpSkillApi.Repositories;
 
 namespace UpSkillApi;
 
@@ -18,10 +17,6 @@ public class Program
         // Register DbContext with connection string from appsettings
         builder.Services.AddDbContext<UpSkillDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-        // Register repository directly
-        builder.Services.AddScoped<ProfessionRepository>();
-        builder.Services.AddScoped<WorkerRepository>();
 
         var app = builder.Build();
 
