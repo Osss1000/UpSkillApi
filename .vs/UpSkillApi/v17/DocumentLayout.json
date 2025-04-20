@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|c:\\users\\abdelrahman\\source\\new folder\\upskillapi\\upskillapi\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|solutionrelative:upskillapi\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|c:\\users\\abdelrahman\\source\\new folder\\upskillapi\\upskillapi\\controllers\\antercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|solutionrelative:upskillapi\\controllers\\antercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|c:\\users\\abdelrahman\\source\\new folder\\upskillapi\\upskillapi\\models\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|solutionrelative:upskillapi\\models\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|c:\\users\\abdelrahman\\source\\new folder\\upskillapi\\upskillapi\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|solutionrelative:upskillapi\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|c:\\users\\abdelrahman\\source\\new folder\\upskillapi\\upskillapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|solutionrelative:upskillapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|c:\\users\\abdelrahman\\source\\new folder\\upskillapi\\upskillapi\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{4957B7CC-0337-4F23-9C88-8517370EC5D3}|UpSkillApi\\UpSkillApi.csproj|solutionrelative:upskillapi\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,33 +38,59 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
+              "Title": "Client.cs",
+              "DocumentMoniker": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\Models\\Client.cs",
+              "RelativeDocumentMoniker": "UpSkillApi\\Models\\Client.cs",
+              "ToolTip": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\Models\\Client.cs",
+              "RelativeToolTip": "UpSkillApi\\Models\\Client.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-20T20:30:45.442Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\Models\\User.cs",
+              "RelativeDocumentMoniker": "UpSkillApi\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\Models\\User.cs",
+              "RelativeToolTip": "UpSkillApi\\Models\\User.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAswAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-20T20:30:29.872Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": ".gitignore",
               "DocumentMoniker": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\.gitignore",
               "RelativeDocumentMoniker": "UpSkillApi\\.gitignore",
               "ToolTip": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\.gitignore",
               "RelativeToolTip": "UpSkillApi\\.gitignore",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2025-04-19T04:06:25.639Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "AnterController.cs",
               "DocumentMoniker": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\Controllers\\AnterController.cs",
               "RelativeDocumentMoniker": "UpSkillApi\\Controllers\\AnterController.cs",
               "ToolTip": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\Controllers\\AnterController.cs",
               "RelativeToolTip": "UpSkillApi\\Controllers\\AnterController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAJ4AAAAAAAAAAAAQwOEAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-19T04:06:00.226Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\abdelrahman\\source\\New folder\\UpSkillApi\\UpSkillApi\\Program.cs",
               "RelativeDocumentMoniker": "UpSkillApi\\Program.cs",

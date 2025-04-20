@@ -36,9 +36,9 @@ namespace UpSkillApi.Controllers
 
         }
 
-
         // GET: api/<postdetails>
         [HttpGet]
+        [Route("getAllMarkedPosts")]
         public async Task<ActionResult<List<ClientPost>>> anGetAllMarkedPosts()
         {
             var posts = await _context.ClientPosts.
@@ -47,7 +47,17 @@ namespace UpSkillApi.Controllers
             return Ok(posts);
         }
 
-        [HttpGet("Post/{id}")]
+        [HttpGet]
+        [Route("getAllPosts")]
+        public async Task<ActionResult<List<ClientPost>>> anGetAllPosts()
+        {
+            var posts = await _context.ClientPosts.ToListAsync();
+
+            return Ok(posts);
+        }
+
+
+        [HttpGet("getPost/{id}")]
         public async Task<ActionResult<ClientPost>> anGetPostsById(int id)
         {
             var post = await _context.ClientPosts.FindAsync(id);
@@ -62,6 +72,7 @@ namespace UpSkillApi.Controllers
 
         // POST api/<postdetails>
         [HttpPost]
+        [Route("AddPost")]
         public async Task<ActionResult> anPost([FromBody] ClientPost post)
         {
 
@@ -86,7 +97,7 @@ namespace UpSkillApi.Controllers
 
         // PUT api/<postdetails>/5
         [HttpPost]
-        [Route("put")]
+        [Route("updatePost")]
         public async Task<ActionResult> anPutPost([FromBody] ClientPost post)
         {
             if (post.ClientPostId != 0)
@@ -101,7 +112,7 @@ namespace UpSkillApi.Controllers
 
         // DELETE api/<postdetails>/5
         [HttpPost]
-        [Route("delete")]
+        [Route("deletePost")]
         public async Task<ActionResult> anDeletePost([FromBody] int id)
         {
             var post = await _context.ClientPosts.FindAsync(id);
@@ -126,7 +137,8 @@ namespace UpSkillApi.Controllers
                 {
                     Name = u.Name,
                     Email = u.Email,
-                    PhoneNumber = u.PhoneNumber
+                    PhoneNumber = u.PhoneNumber,
+                    
                 })
                 .FirstOrDefaultAsync();
 
@@ -152,6 +164,7 @@ namespace UpSkillApi.Controllers
                 {
                     Name = u.Name,
                     Email = u.Email,
+                    PhoneNumber = u.PhoneNumber
                 })
                 .FirstOrDefaultAsync();
 
@@ -165,7 +178,7 @@ namespace UpSkillApi.Controllers
 
         // put address of client
         [HttpPost]
-        [Route("putAddress/{id}")]
+        [Route("updateAddress/{id}")]
         public async Task<ActionResult> anPutAddress([FromBody] Client userFromRequest, int id)
         {
             Client? user = await _context.Clients.FindAsync(id);
@@ -210,6 +223,7 @@ namespace UpSkillApi.Controllers
 
         // get all volunteering posts
         [HttpGet]
+        [Route("getAllVolunteeringJobs")]
         public async Task<ActionResult<List<VolunteeringJob>>> anGetAll()
         {
             var posts = await _context.VolunteeringJobs.ToListAsync();
