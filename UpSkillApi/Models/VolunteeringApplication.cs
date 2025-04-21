@@ -10,9 +10,7 @@ public partial class VolunteeringApplication
     public DateTime ApplyDate { get; set; }
 
     public int VolunteeringJobId { get; set; }
-
-    public int ApplicantType { get; set; }
-
+    
     public int ApplicationStatusId { get; set; }
 
     public DateTime CreatedDate { get; set; }
