@@ -24,6 +24,8 @@ public class Program
         builder.Services.AddScoped<AdvertisementRepository>();
         builder.Services.AddScoped<UserRepository>();
         builder.Services.AddScoped<AuthRepository>();
+        builder.Services.AddScoped<VolunteeringRepository>();
+        builder.Services.AddScoped<ClientPostRepository>();
 
 
         // ✅ Enable CORS

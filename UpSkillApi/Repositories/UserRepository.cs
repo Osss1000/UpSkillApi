@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
+using System.Text;
 using UpSkillApi.Data;
 using UpSkillApi.DTOs;
+using UpSkillApi.Models;
 
 namespace UpSkillApi.Repositories
 {
@@ -65,6 +68,30 @@ namespace UpSkillApi.Repositories
                 default:
                     return false; // Unknown role
             }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        
+        
+        public async Task<bool> UpdatePasswordAsync(UpdatePasswordDto dto)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == dto.UserId);
+            if (user == null) return false;
+
+            // Check old password
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.OldPassword));
+
+            for (int i = 0; i < computedHash.Length; i++)
+            {
+                if (computedHash[i] != user.PasswordHash[i]) return false;
+            }
+
+            // Update to new password
+            using var newHmac = new HMACSHA512();
+            user.PasswordSalt = newHmac.Key;
+            user.PasswordHash = newHmac.ComputeHash(Encoding.UTF8.GetBytes(dto.NewPassword));
 
             await _context.SaveChangesAsync();
             return true;

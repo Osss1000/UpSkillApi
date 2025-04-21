@@ -92,17 +92,29 @@ namespace UpSkillApi.Data
             modelBuilder.Entity<ClientPost>(entity =>
             {
                 entity.Property(e => e.Title).HasMaxLength(100);
-                entity.Property(e => e.Profession).HasMaxLength(50);
                 entity.Property(e => e.Location).HasMaxLength(200);
                 entity.Property(e => e.Details).HasMaxLength(2550);
                 entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
 
-                entity.HasOne(d => d.Client).WithMany(p => p.ClientPosts).HasForeignKey(d => d.ClientId).OnDelete(DeleteBehavior.NoAction);
-                entity.HasOne(d => d.User).WithMany(p => p.ClientPosts).HasForeignKey(d => d.UserId).OnDelete(DeleteBehavior.NoAction);
+                entity.HasOne(d => d.Client)
+                      .WithMany(p => p.ClientPosts)
+                      .HasForeignKey(d => d.ClientId)
+                      .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne(d => d.User)
+                      .WithMany(p => p.ClientPosts)
+                      .HasForeignKey(d => d.UserId)
+                      .OnDelete(DeleteBehavior.NoAction);
+
                 entity.HasOne(d => d.PostStatus)
-                    .WithMany(s => s.ClientPosts)
-                    .HasForeignKey(d => d.PostStatusId)
-                    .OnDelete(DeleteBehavior.NoAction);                
+                      .WithMany(s => s.ClientPosts)
+                      .HasForeignKey(d => d.PostStatusId)
+                      .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne(d => d.Profession)
+                      .WithMany()
+                      .HasForeignKey(d => d.ProfessionId)
+                      .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<Organization>(entity =>
@@ -122,11 +134,7 @@ namespace UpSkillApi.Data
                 entity.Property(e => e.Location).HasMaxLength(200);
                 entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
                 entity.HasOne(d => d.Organization).WithMany(p => p.PaidJobs).HasForeignKey(d => d.OrganizationId).OnDelete(DeleteBehavior.NoAction);
-                entity.HasOne(d => d.PostStatus)
-                    .WithMany(s => s.PaidJobs)
-                    .HasForeignKey(d => d.PostStatusId)
-                    .OnDelete(DeleteBehavior.NoAction);
-                
+                entity.HasOne(d => d.PostStatus).WithMany(s => s.PaidJobs).HasForeignKey(d => d.PostStatusId).OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<VolunteeringJob>(entity =>
@@ -134,14 +142,9 @@ namespace UpSkillApi.Data
                 entity.Property(e => e.Title).HasMaxLength(100);
                 entity.Property(e => e.Description).HasMaxLength(500);
                 entity.Property(e => e.Location).HasMaxLength(200);
-
                 entity.HasOne(d => d.Organization).WithMany(p => p.VolunteeringJobs).HasForeignKey(d => d.OrganizationId).OnDelete(DeleteBehavior.NoAction);
                 entity.HasOne(d => d.ApplicationStatus).WithMany(p => p.VolunteeringJobs).HasForeignKey(d => d.ApplicationStatusId).OnDelete(DeleteBehavior.NoAction);
-                entity.HasOne(d => d.PostStatus)
-                    .WithMany(s => s.VolunteeringJobs)
-                    .HasForeignKey(d => d.PostStatusId)
-                    .OnDelete(DeleteBehavior.NoAction);
-                
+                entity.HasOne(d => d.PostStatus).WithMany(s => s.VolunteeringJobs).HasForeignKey(d => d.PostStatusId).OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -160,7 +163,6 @@ namespace UpSkillApi.Data
 
             modelBuilder.Entity<WorkerApplication>(entity =>
             {
-                entity.Property(e => e.ApplicationType).HasMaxLength(50);
                 entity.HasOne(d => d.ApplicationStatus).WithMany(p => p.WorkerApplications).HasForeignKey(d => d.ApplicationStatusId).OnDelete(DeleteBehavior.NoAction);
                 entity.HasOne(d => d.ClientPost).WithMany(p => p.WorkerApplications).HasForeignKey(d => d.ClientPostId).OnDelete(DeleteBehavior.NoAction);
                 entity.HasOne(d => d.PaidJob).WithMany(p => p.WorkerApplications).HasForeignKey(d => d.PaidJobId).OnDelete(DeleteBehavior.NoAction);

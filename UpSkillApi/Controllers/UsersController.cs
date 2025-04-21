@@ -50,6 +50,16 @@ namespace UpSkillApi.Controllers
 
             return Ok("Address updated");
         }
+        
+        [HttpPut("password")]
+        public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordDto dto)
+        {
+            var result = await _userRepository.UpdatePasswordAsync(dto);
+            if (!result)
+                return BadRequest("Password update failed. Check old password or user ID.");
+
+            return Ok("Password updated successfully.");
+        }
 
         // 🔒 FUTURE: Update profile picture
         // [HttpPut("profile-image")]
