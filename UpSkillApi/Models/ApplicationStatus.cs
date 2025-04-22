@@ -31,7 +31,6 @@ namespace UpSkillApi.Models
         }
 
         public virtual ICollection<VolunteeringApplication> VolunteeringApplications { get; set; } = new List<VolunteeringApplication>();
-        public virtual ICollection<VolunteeringJob> VolunteeringJobs { get; set; } = new List<VolunteeringJob>();
         public virtual ICollection<WorkerApplication> WorkerApplications { get; set; } = new List<WorkerApplication>();
     }
 }

@@ -2,6 +2,8 @@ namespace UpSkillApi.DTOs
 {
     public class VolunteeringPostDto
     {
+        public int OrganizationId { get; set; } // 👈 الجديد
+        public int UserId { get; set; }
         public bool IsApplied { get; set; }
         public int PostId { get; set; }
         public string OrganizationName { get; set; } = null!;

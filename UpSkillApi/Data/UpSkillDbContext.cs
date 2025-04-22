@@ -143,7 +143,6 @@ namespace UpSkillApi.Data
                 entity.Property(e => e.Description).HasMaxLength(500);
                 entity.Property(e => e.Location).HasMaxLength(200);
                 entity.HasOne(d => d.Organization).WithMany(p => p.VolunteeringJobs).HasForeignKey(d => d.OrganizationId).OnDelete(DeleteBehavior.NoAction);
-                entity.HasOne(d => d.ApplicationStatus).WithMany(p => p.VolunteeringJobs).HasForeignKey(d => d.ApplicationStatusId).OnDelete(DeleteBehavior.NoAction);
                 entity.HasOne(d => d.PostStatus).WithMany(s => s.VolunteeringJobs).HasForeignKey(d => d.PostStatusId).OnDelete(DeleteBehavior.NoAction);
             });
 
