@@ -5,7 +5,7 @@ using UpSkillApi.Repositories;
 namespace UpSkillApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/client-posts")]
     public class ClientPostsController : ControllerBase
     {
         private readonly ClientPostRepository _clientPostRepository;
@@ -15,7 +15,8 @@ namespace UpSkillApi.Controllers
             _clientPostRepository = clientPostRepository;
         }
 
-        [HttpPost]
+        // POST: api/client-posts/create
+        [HttpPost("create")]
         public async Task<IActionResult> CreateClientPost([FromBody] CreateClientPostDto dto)
         {
             var success = await _clientPostRepository.CreateClientPostAsync(dto);
@@ -24,8 +25,9 @@ namespace UpSkillApi.Controllers
 
             return Ok(new { success = true, message = "تم إنشاء البوست بنجاح" });
         }
-        
-        [HttpPut]
+
+        // PUT: api/client-posts/update
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateClientPost([FromBody] UpdateClientPostDto dto)
         {
             var success = await _clientPostRepository.UpdateClientPostAsync(dto);
@@ -34,8 +36,9 @@ namespace UpSkillApi.Controllers
 
             return Ok(new { success = true, message = "تم تعديل البوست بنجاح" });
         }
-        
-        [HttpDelete("{postId}")]
+
+        // DELETE: api/client-posts/delete/5
+        [HttpPost("delete/{postId}")]
         public async Task<IActionResult> DeleteClientPost(int postId)
         {
             var success = await _clientPostRepository.DeleteClientPostAsync(postId);
@@ -44,17 +47,16 @@ namespace UpSkillApi.Controllers
 
             return Ok(new { success = true, message = "تم حذف البوست بنجاح" });
         }
-        
-        [HttpGet("{postId}")]
-        public async Task<IActionResult> GetClientPostDetails(int postId)
-        {
-            var post = await _clientPostRepository.GetClientPostDetailsAsync(postId);
-            if (post == null)
-                return NotFound(new { success = false, message = "البوست غير موجود" });
 
-            return Ok(post);
+        // GET: api/client-posts/by-client/10
+        [HttpGet("Posted/{clientId}")]
+        public async Task<IActionResult> GetClientPostsByClientId(int clientId)
+        {
+            var posts = await _clientPostRepository.GetClientPostsByClientIdAsync(clientId);
+            return Ok(posts);
         }
-        
+
+        // PUT: api/client-posts/mark-as-done/5
         [HttpPut("mark-as-done/{postId}")]
         public async Task<IActionResult> MarkPostAsDone(int postId)
         {
@@ -64,8 +66,9 @@ namespace UpSkillApi.Controllers
 
             return Ok(new { success = true, message = "تم إنهاء البوست بنجاح" });
         }
-        
-        [HttpGet("completed-posts/{clientId}")]
+
+        // GET: api/client-posts/completed/by-client/10
+        [HttpGet("completed/by-client/{clientId}")]
         public async Task<IActionResult> GetCompletedClientPosts(int clientId)
         {
             var posts = await _clientPostRepository.GetCompletedClientPostsAsync(clientId);

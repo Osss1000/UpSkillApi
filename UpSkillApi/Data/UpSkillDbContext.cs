@@ -101,11 +101,6 @@ namespace UpSkillApi.Data
                       .HasForeignKey(d => d.ClientId)
                       .OnDelete(DeleteBehavior.NoAction);
 
-                entity.HasOne(d => d.User)
-                      .WithMany(p => p.ClientPosts)
-                      .HasForeignKey(d => d.UserId)
-                      .OnDelete(DeleteBehavior.NoAction);
-
                 entity.HasOne(d => d.PostStatus)
                       .WithMany(s => s.ClientPosts)
                       .HasForeignKey(d => d.PostStatusId)

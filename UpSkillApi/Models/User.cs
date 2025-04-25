@@ -25,9 +25,7 @@ public partial class User
     public string? PhoneNumber { get; set; }
 
     public virtual Client? Client { get; set; }
-
-    public virtual ICollection<ClientPost> ClientPosts { get; set; } = new List<ClientPost>();
-
+    
     public virtual Organization? Organization { get; set; }
 
     public virtual Worker? Worker { get; set; }

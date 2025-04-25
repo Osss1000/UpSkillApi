@@ -25,7 +25,7 @@ namespace UpSkillApi.Repositories
                     SponsorName = a.Sponsor.Name,
                     Description = a.Description,
                     Value = a.Value,
-                    // Future : SponsorImagePath = a.Sponsor.ImagePath 
+                    adID= a.AdvertisementId
                 })
                 .ToListAsync();
 

@@ -31,6 +31,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Controllers\OrganizationControllers\" />
+      <Folder Include="Controllers\WorkerControllers\" />
       <Folder Include="wwwroot\uploads\nationalIds\" />
     </ItemGroup>
 

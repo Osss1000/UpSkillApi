@@ -16,14 +16,19 @@ namespace UpSkillApi.Repositories
 
         public async Task<bool> CreateClientPostAsync(CreateClientPostDto dto)
         {
-            // اجمع التاريخ + الوقت (أو 00:00 لو مش مبعوت)
+            // اجمع التاريخ + الوقت
             var combinedDateTime = dto.Date.Date + (dto.Time ?? TimeSpan.Zero);
+
+            // ✅ نحاول نجيب الـ ID من الاسم
+            var profession = await _context.Professions.FirstOrDefaultAsync(p => p.Name == dto.ProfessionName);
+            if (profession == null)
+                return false; // أو ممكن ترجع خطأ واضح حسب طريقة التنفيذ
 
             var post = new ClientPost
             {
                 Title = dto.Title,
                 Price = dto.Price,
-                ProfessionId = dto.ProfessionId,
+                ProfessionId = profession.ProfessionId,
                 DateAndTime = combinedDateTime,
                 Details = dto.Details,
                 Location = dto.Location,
@@ -69,48 +74,26 @@ namespace UpSkillApi.Repositories
 
             return true;
         }
-        
-        public async Task<ClientPostDetailsDto?> GetClientPostDetailsAsync(int postId)
+        public async Task<List<ClientPostListDto>> GetClientPostsByClientIdAsync(int clientId)
         {
-            var post = await _context.ClientPosts
+            var posts = await _context.ClientPosts
                 .Include(p => p.Profession)
-                .Include(p => p.WorkerApplications)
-                .ThenInclude(a => a.Worker)
-                .ThenInclude(w => w.User)
-                .Include(p => p.WorkerApplications)
-                .ThenInclude(a => a.Worker)
-                .ThenInclude(w => w.Ratings)
-                .FirstOrDefaultAsync(p => p.ClientPostId == postId);
+                .Where(p => p.ClientId == clientId && p.PostStatusId == 1)
+                .OrderByDescending(p => p.CreatedDate)
+                .ToListAsync();
 
-            if (post == null) return null;
-
-            var dto = new ClientPostDetailsDto
+            var result = posts.Select(p => new ClientPostListDto
             {
-                PostId = post.ClientPostId,
-                Title = post.Title,
-                Details = post.Details,
-                DateAndTime = post.DateAndTime,
-                Price = post.Price,
-                Location = post.Location,
-                ProfessionName = post.Profession.Name,
-                Applicants = post.WorkerApplications
-                    .Where(a => a.ClientPostId != null) // كده كده هيكونوا لنفس البوست
-                    .Select(a => a.Worker)
-                    .Select(w => new WorkerApplicantDto
-                    {
-                        WorkerId = w.WorkerId,
-                        FullName = w.User.Name,
-                        Bio = w.User.Bio,
-                        Location = w.Address,
-                        ExperienceYears = w.Experience,
-                        AverageRating = w.Ratings.Any()
-                            ? Math.Round(w.Ratings.Average(r => r.Score), 1)
-                            : null
-                    })
-                    .ToList()
-            };
+                PostId = p.ClientPostId,
+                Title = p.Title,
+                DateAndTime = p.DateAndTime,
+                Location = p.Location,
+                Price = p.Price,
+                ProfessionName = p.Profession.Name,
+                Details = p.Details // ✅ الإضافة الجديدة
+            }).ToList();
 
-            return dto;
+            return result;
         }
         public async Task<bool> MarkPostAsDoneAsync(int postId)
         {
@@ -132,7 +115,7 @@ namespace UpSkillApi.Repositories
         {
             var posts = await _context.ClientPosts
                 .Include(p => p.Profession)
-                .Where(p => p.ClientId == clientId && p.PostStatusId == 2) // ✅ Done فقط
+                .Where(p => p.ClientId == clientId && p.PostStatusId == 2)
                 .Select(p => new ClientPostSimpleDto
                 {
                     ClientPostId = p.ClientPostId,
@@ -140,7 +123,8 @@ namespace UpSkillApi.Repositories
                     Price = p.Price,
                     Profession = p.Profession.Name,
                     DateAndTime = p.DateAndTime,
-                    Location = p.Location ?? ""
+                    Location = p.Location ?? "",
+                    Details = p.Details // ✅ الإضافة الجديدة
                 })
                 .ToListAsync();
 
