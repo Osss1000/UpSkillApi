@@ -19,7 +19,7 @@ public class AuthRepository
         return await _context.Users.AnyAsync(u => u.Email == email);
     }
 
-    public async Task<User> RegisterClientAsync(RegisterClientDto dto)
+    public async Task<ClientUserDto> RegisterClientAsync(RegisterClientDto dto)
     {
         if (dto.FrontNationalIdImage == null || dto.BackNationalIdImage == null)
             throw new ArgumentException("يجب رفع صورتي البطاقة (الأمامية والخلفية)");
@@ -76,7 +76,15 @@ public class AuthRepository
             await _context.SaveChangesAsync();
 
             await transaction.CommitAsync();
-            return user;
+
+            return new ClientUserDto
+            {
+                UserId = user.UserId,
+                ClientId = client.ClientId,
+                Name = user.Name,
+                Email = user.Email,
+                Role = user.Role
+            };
         }
         catch (DbUpdateException ex) when (ex.InnerException != null && ex.InnerException.Message.Contains("IX_Clients_NationalId"))
         {
@@ -90,7 +98,7 @@ public class AuthRepository
         }
     }
 
-    public async Task<User?> Login(LoginDto dto)
+    public async Task<ClientUserDto?> Login(LoginDto dto)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
         if (user == null) return null;
@@ -103,6 +111,16 @@ public class AuthRepository
             if (computedHash[i] != user.PasswordHash[i]) return null;
         }
 
-        return user;
+        var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserId == user.UserId);
+        if (client == null) return null;
+
+        return new ClientUserDto
+        {
+            UserId = user.UserId,
+            ClientId = client.ClientId,
+            Name = user.Name,
+            Email = user.Email,
+            Role = user.Role
+        };
     }
 }

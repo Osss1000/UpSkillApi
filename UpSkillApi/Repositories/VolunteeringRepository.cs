@@ -24,6 +24,8 @@ namespace UpSkillApi.Repositories
                 .Select(p => new VolunteeringPostDto
                 {
                     PostId = p.VolunteeringJobId,
+                    OrganizationId = p.OrganizationId, // 👈 هنا
+                    UserId = p.Organization.UserId,
                     OrganizationName = p.Organization.User.Name,
                     Title = p.Title,
                     Description = p.Description,

@@ -12,6 +12,9 @@ namespace UpSkillApi.DTOs
         public string SponsorName { get; set; }
         public string Description { get; set; }
         public int? Value { get; set; }
+        
+        public int adID {get;set;}
+
         public string? SponsorImagePath { get; set; }
     }
 }

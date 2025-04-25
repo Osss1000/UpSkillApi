@@ -13,8 +13,6 @@ public partial class ClientPost
     public string? Details { get; set; }
     public string? Location { get; set; }
     public int ClientId { get; set; }
-    public int UserId { get; set; }
-
     public DateTime CreatedDate { get; set; }
     public DateTime? ModifiedDate { get; set; }
     public int PostStatusId { get; set; }
@@ -22,7 +20,6 @@ public partial class ClientPost
     public virtual Profession Profession { get; set; } = null!;
     public virtual PostStatus PostStatus { get; set; } = null!;
     public virtual Client Client { get; set; } = null!;
-    public virtual User User { get; set; } = null!;
     public virtual ICollection<WorkerApplication> WorkerApplications { get; set; } = new List<WorkerApplication>();
     public DateTime CompletedAt { get; set; }
 }

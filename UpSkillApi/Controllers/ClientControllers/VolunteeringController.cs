@@ -39,7 +39,7 @@ namespace UpSkillApi.Controllers
             return Ok(new { success = true, message = "تم التقديم بنجاح", isApplied = true });
         }
 
-        [HttpDelete("cancel")]
+        [HttpPost("cancel")]
         public async Task<IActionResult> CancelApplication([FromBody] CancelVolunteeringDto dto)
         {
             var result = await _volunteeringRepository.CancelApplicationAsync(dto.ClientId, dto.VolunteeringJobId);

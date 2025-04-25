@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UpSkillApi.Data;
 
@@ -11,9 +12,11 @@ using UpSkillApi.Data;
 namespace UpSkillApi.Migrations
 {
     [DbContext(typeof(UpSkillDbContext))]
-    partial class UpSkillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250422004230_newone")]
+    partial class newone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,21 +99,21 @@ namespace UpSkillApi.Migrations
                         new
                         {
                             ApplicationStatusId = 1,
-                            CreatedDate = new DateTime(2025, 4, 22, 18, 53, 46, 144, DateTimeKind.Utc).AddTicks(1830),
+                            CreatedDate = new DateTime(2025, 4, 22, 0, 42, 30, 334, DateTimeKind.Utc).AddTicks(5680),
                             Description = "Awaiting review",
                             Status = 1
                         },
                         new
                         {
                             ApplicationStatusId = 2,
-                            CreatedDate = new DateTime(2025, 4, 22, 18, 53, 46, 144, DateTimeKind.Utc).AddTicks(1840),
+                            CreatedDate = new DateTime(2025, 4, 22, 0, 42, 30, 334, DateTimeKind.Utc).AddTicks(5680),
                             Description = "Application accepted",
                             Status = 2
                         },
                         new
                         {
                             ApplicationStatusId = 3,
-                            CreatedDate = new DateTime(2025, 4, 22, 18, 53, 46, 144, DateTimeKind.Utc).AddTicks(1840),
+                            CreatedDate = new DateTime(2025, 4, 22, 0, 42, 30, 334, DateTimeKind.Utc).AddTicks(5680),
                             Description = "Application denied",
                             Status = 3
                         });
@@ -199,6 +202,9 @@ namespace UpSkillApi.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("ClientPostId");
 
                     b.HasIndex("ClientId");
@@ -206,6 +212,8 @@ namespace UpSkillApi.Migrations
                     b.HasIndex("PostStatusId");
 
                     b.HasIndex("ProfessionId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ClientPosts");
                 });
@@ -798,11 +806,19 @@ namespace UpSkillApi.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("UpSkillApi.Models.User", "User")
+                        .WithMany("ClientPosts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Client");
 
                     b.Navigation("PostStatus");
 
                     b.Navigation("Profession");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UpSkillApi.Models.Organization", b =>
@@ -1013,6 +1029,8 @@ namespace UpSkillApi.Migrations
             modelBuilder.Entity("UpSkillApi.Models.User", b =>
                 {
                     b.Navigation("Client");
+
+                    b.Navigation("ClientPosts");
 
                     b.Navigation("Organization");
 
