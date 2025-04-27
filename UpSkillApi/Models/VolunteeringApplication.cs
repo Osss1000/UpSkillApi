@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 
 namespace UpSkillApi.Models;
+public enum ApplicantTypeEnum
+{
+    Worker = 1,
+    Client = 2
+}
 
 public partial class VolunteeringApplication
 {

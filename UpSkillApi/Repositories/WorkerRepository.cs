@@ -48,6 +48,7 @@ namespace UpSkillApi.Repositories
             var result = workers.Select(w => new WorkerByProfessionDto
             {
                 FullName = w.User.Name,
+                WorkerId = w.WorkerId, // ✅ Fill the ID
                 Bio = w.User.Bio,
                 Location = w.Address,
                 AverageRating = w.Ratings.Any() ? w.Ratings.Average(r => r.Score) : 0,
