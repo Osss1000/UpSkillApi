@@ -26,7 +26,6 @@ namespace UpSkillApi.Controllers
             return Ok(new
             {
                 user.UserId,
-                user.ClientId, // ✅ أضفنا ClientId هنا
                 user.Name,
                 user.Email,
                 user.Role
@@ -56,7 +55,6 @@ namespace UpSkillApi.Controllers
             return Ok(new
             {
                 user.UserId,
-                user.ClientId, // ✅ أضفنا ClientId هنا برضو
                 user.Name,
                 user.Email,
                 user.Role
