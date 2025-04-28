@@ -22,6 +22,9 @@ namespace UpSkillApi.Controllers
             return Ok(posts);
         }
         
+        
+        
+        
         [HttpGet("volunteering-posts/search")]
         public async Task<IActionResult> SearchVolunteeringPosts([FromQuery] string keyword, [FromQuery] int clientUserId)
         {
@@ -48,14 +51,12 @@ namespace UpSkillApi.Controllers
 
             return Ok(new { success = true, message = "تم إلغاء التقديم", isApplied = false });
         }
-        
-        [HttpGet("applied-posts/{clientId}")]
-        public async Task<IActionResult> GetAppliedPosts(int clientId)
+        [HttpGet("applied-posts/{userId}")]
+        public async Task<IActionResult> GetAppliedPosts(int userId)
         {
-            var posts = await _volunteeringRepository.GetAppliedVolunteeringPostsAsync(clientId);
+            var posts = await _volunteeringRepository.GetAppliedVolunteeringPostsAsync(userId);
             return Ok(posts);
         }
-        
         [HttpGet("organization/profile/{userId}")]
         public async Task<IActionResult> GetVolunteeringOrganizationProfile(int userId)
         {
@@ -64,6 +65,13 @@ namespace UpSkillApi.Controllers
                 return NotFound(new { success = false, message = "المنظمة التطوعية غير موجودة أو ليست من النوع الصحيح" });
 
             return Ok(profile);
+        }
+        
+        [HttpGet("volunteering-posts-worker")]
+        public async Task<IActionResult> GetVolunteeringPostsForWorker([FromQuery] int workerUserId)
+        {
+            var posts = await _volunteeringRepository.GetAllVolunteeringPostsForWorkerAsync(workerUserId);
+            return Ok(posts);
         }
     }
 }

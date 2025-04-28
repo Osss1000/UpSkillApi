@@ -49,10 +49,10 @@ namespace UpSkillApi.Controllers
         }
 
         // GET: api/client-posts/by-client/10
-        [HttpGet("Posted/{clientId}")]
-        public async Task<IActionResult> GetClientPostsByClientId(int clientId)
+        [HttpGet("Posted/{userId}")]
+        public async Task<IActionResult> GetClientPostsByUserId(int userId)
         {
-            var posts = await _clientPostRepository.GetClientPostsByClientIdAsync(clientId);
+            var posts = await _clientPostRepository.GetClientPostsByUserIdAsync(userId);
             return Ok(posts);
         }
 
@@ -68,10 +68,31 @@ namespace UpSkillApi.Controllers
         }
 
         // GET: api/client-posts/completed/by-client/10
-        [HttpGet("completed/by-client/{clientId}")]
-        public async Task<IActionResult> GetCompletedClientPosts(int clientId)
+        [HttpGet("completed/by-client/{userId}")]
+        public async Task<IActionResult> GetCompletedClientPosts(int userId)
         {
-            var posts = await _clientPostRepository.GetCompletedClientPostsAsync(clientId);
+            var posts = await _clientPostRepository.GetCompletedClientPostsAsync(userId);
+            return Ok(posts);
+        }
+        
+        [HttpGet("active-posts")]
+        public async Task<IActionResult> GetAllActiveClientPosts()
+        {
+            var posts = await _clientPostRepository.GetAllActiveClientPostsAsync();
+            return Ok(posts);
+        }
+        
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchClientPosts([FromQuery] string query)
+        {
+            var posts = await _clientPostRepository.SearchActiveClientPostsAsync(query);
+            return Ok(posts);
+        }
+        
+        [HttpGet("filter-client-posts")]
+        public async Task<IActionResult> FilterClientPosts([FromQuery] ClientPostFilterDto filter)
+        {
+            var posts = await _clientPostRepository.FilterClientPostsAsync(filter);
             return Ok(posts);
         }
     }

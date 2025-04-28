@@ -26,6 +26,7 @@ public class Program
         builder.Services.AddScoped<AuthRepository>();
         builder.Services.AddScoped<VolunteeringRepository>();
         builder.Services.AddScoped<ClientPostRepository>();
+        builder.Services.AddScoped<WorkerApplicationRepository>();
 
 
         // ✅ Enable CORS

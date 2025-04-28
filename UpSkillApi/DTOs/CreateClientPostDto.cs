@@ -9,6 +9,6 @@ namespace UpSkillApi.DTOs
         public TimeSpan? Time { get; set; }             // الوقت (اختياري)
         public string? Details { get; set; }
         public string? Location { get; set; }
-        public int ClientId { get; set; }
+        public int UserId { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using UpSkillApi.Data;
 using UpSkillApi.DTOs;
 using UpSkillApi.Models;
+using UpSkillApi.Helpers;
 
 namespace UpSkillApi.Repositories
 {
@@ -16,6 +17,14 @@ namespace UpSkillApi.Repositories
 
         public async Task<bool> CreateClientPostAsync(CreateClientPostDto dto)
         {
+            // 🛠️ نحول ال UserId إلى ClientId
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserId == dto.UserId);
+            if (client == null)
+            {
+                throw new Exception("العميل غير موجود");
+            }
+            int clientId = client.ClientId;
+
             // اجمع التاريخ + الوقت
             var combinedDateTime = dto.Date.Date + (dto.Time ?? TimeSpan.Zero);
 
@@ -32,7 +41,7 @@ namespace UpSkillApi.Repositories
                 DateAndTime = combinedDateTime,
                 Details = dto.Details,
                 Location = dto.Location,
-                ClientId = dto.ClientId,
+                ClientId = clientId, // ✅ استخدام ال ClientId اللي جبناه
                 CreatedDate = DateTime.UtcNow,
                 PostStatusId = 1, // "Posted"
             };
@@ -41,8 +50,7 @@ namespace UpSkillApi.Repositories
             await _context.SaveChangesAsync();
 
             return true;
-        }
-        
+        }        
         public async Task<bool> UpdateClientPostAsync(UpdateClientPostDto dto)
         {
             var post = await _context.ClientPosts.FindAsync(dto.ClientPostId);
@@ -74,8 +82,16 @@ namespace UpSkillApi.Repositories
 
             return true;
         }
-        public async Task<List<ClientPostListDto>> GetClientPostsByClientIdAsync(int clientId)
+        public async Task<List<ClientPostListDto>> GetClientPostsByUserIdAsync(int userId)
         {
+            // 🛠️ نحول ال UserId إلى ClientId
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserId == userId);
+            if (client == null)
+            {
+                throw new Exception("العميل غير موجود");
+            }
+            int clientId = client.ClientId;
+
             var posts = await _context.ClientPosts
                 .Include(p => p.Profession)
                 .Where(p => p.ClientId == clientId && p.PostStatusId == 1)
@@ -111,8 +127,16 @@ namespace UpSkillApi.Repositories
             return true;
         }
         
-        public async Task<List<ClientPostSimpleDto>> GetCompletedClientPostsAsync(int clientId)
+        public async Task<List<ClientPostSimpleDto>> GetCompletedClientPostsAsync(int userId)
         {
+            // 🛠️ تحويل UserId إلى ClientId
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserId == userId);
+            if (client == null)
+            {
+                throw new Exception("العميل غير موجود");
+            }
+            int clientId = client.ClientId;
+
             var posts = await _context.ClientPosts
                 .Include(p => p.Profession)
                 .Where(p => p.ClientId == clientId && p.PostStatusId == 2)
@@ -129,6 +153,96 @@ namespace UpSkillApi.Repositories
                 .ToListAsync();
 
             return posts;
+        }        
+        public async Task<List<ActiveClientPostDto>> GetAllActiveClientPostsAsync()
+        {
+            var posts = await _context.ClientPosts
+                .Include(p => p.Profession)
+                .Include(p => p.Client)
+                .ThenInclude(c => c.User)
+                .Where(p => p.PostStatusId == 1) // ✅ يعني Posted
+                .OrderByDescending(p => p.CreatedDate)
+                .Select(p => new ActiveClientPostDto
+                {
+                    PostId = p.ClientPostId,
+                    Title = p.Title,
+                    Details = p.Details ?? "",
+                    DateAndTime = p.DateAndTime,
+                    Location = p.Location ?? "",
+                    Price = p.Price ?? 0,
+                    ProfessionName = p.Profession.Name,
+                    ClientName = p.Client.User.Name // ✅ اسم العميل
+                })
+                .ToListAsync();
+
+            return posts;
+        }
+        
+        
+        public async Task<List<ClientPostListDto>> SearchActiveClientPostsAsync(string query)
+        {
+            var normalizedQuery = ArabicNormalizer.Normalize(query);
+
+            var posts = await _context.ClientPosts
+                .Include(p => p.Profession)
+                .Include(p => p.Client)
+                .ThenInclude(c => c.User)
+                .Where(p => p.PostStatusId == 1 &&
+                            (ArabicNormalizer.Normalize(p.Title).Contains(normalizedQuery) ||
+                             ArabicNormalizer.Normalize(p.Details ?? "").Contains(normalizedQuery) ||
+                             ArabicNormalizer.Normalize(p.Client.User.Name).Contains(normalizedQuery)))
+                .OrderByDescending(p => p.CreatedDate)
+                .ToListAsync();
+
+            return posts.Select(p => new ClientPostListDto
+            {
+                PostId = p.ClientPostId,
+                Title = p.Title,
+                DateAndTime = p.DateAndTime,
+                Location = p.Location ?? "",
+                Price = p.Price,
+                ProfessionName = p.Profession.Name,
+                ClientName = p.Client.User.Name
+            }).ToList();
+        }
+        
+        public async Task<List<ClientPostListDto>> FilterClientPostsAsync(ClientPostFilterDto filter)
+        {
+            var postsQuery = _context.ClientPosts
+                .Include(p => p.Profession)
+                .Include(p => p.Client)
+                .ThenInclude(c => c.User)
+                .Where(p => p.PostStatusId == 1) // ✅ Active بس
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filter.Location))
+                postsQuery = postsQuery.Where(p => p.Location.Contains(filter.Location));
+
+            if (!string.IsNullOrWhiteSpace(filter.ProfessionName))
+                postsQuery = postsQuery.Where(p => p.Profession.Name == filter.ProfessionName);
+
+            if (filter.MinPrice.HasValue)
+                postsQuery = postsQuery.Where(p => p.Price >= filter.MinPrice.Value);
+
+            if (filter.MaxPrice.HasValue)
+                postsQuery = postsQuery.Where(p => p.Price <= filter.MaxPrice.Value);
+
+            var posts = await postsQuery
+                .OrderByDescending(p => p.CreatedDate)
+                .ToListAsync();
+
+            var result = posts.Select(p => new ClientPostListDto
+            {
+                PostId = p.ClientPostId,
+                Title = p.Title,
+                DateAndTime = p.DateAndTime,
+                Location = p.Location ?? "",
+                Price = p.Price,
+                ProfessionName = p.Profession.Name,
+                ClientName = p.Client.User.Name // ✅ اسم العميل اللي نشر البوست
+            }).ToList();
+
+            return result;
         }
         
     }

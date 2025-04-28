@@ -32,7 +32,7 @@
 
     <ItemGroup>
       <Folder Include="Controllers\OrganizationControllers\" />
-      <Folder Include="Controllers\WorkerControllers\" />
+      <Folder Include="wwwroot\uploads\clearanceCertificates\" />
       <Folder Include="wwwroot\uploads\nationalIds\" />
     </ItemGroup>
 

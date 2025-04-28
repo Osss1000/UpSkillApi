@@ -14,7 +14,6 @@ namespace UpSkillApi.Data
         public DbSet<Client> Clients { get; set; }
         public DbSet<ClientPost> ClientPosts { get; set; }
         public DbSet<Organization> Organizations { get; set; }
-        public DbSet<PaidJob> PaidJobs { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Sponsor> Sponsors { get; set; }
         public DbSet<User> Users { get; set; }
@@ -121,16 +120,7 @@ namespace UpSkillApi.Data
                       .HasForeignKey<Organization>(d => d.UserId)
                       .OnDelete(DeleteBehavior.NoAction);
             });
-
-            modelBuilder.Entity<PaidJob>(entity =>
-            {
-                entity.Property(e => e.Title).HasMaxLength(100);
-                entity.Property(e => e.Description).HasMaxLength(500);
-                entity.Property(e => e.Location).HasMaxLength(200);
-                entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
-                entity.HasOne(d => d.Organization).WithMany(p => p.PaidJobs).HasForeignKey(d => d.OrganizationId).OnDelete(DeleteBehavior.NoAction);
-                entity.HasOne(d => d.PostStatus).WithMany(s => s.PaidJobs).HasForeignKey(d => d.PostStatusId).OnDelete(DeleteBehavior.NoAction);
-            });
+            
 
             modelBuilder.Entity<VolunteeringJob>(entity =>
             {
@@ -159,7 +149,6 @@ namespace UpSkillApi.Data
             {
                 entity.HasOne(d => d.ApplicationStatus).WithMany(p => p.WorkerApplications).HasForeignKey(d => d.ApplicationStatusId).OnDelete(DeleteBehavior.NoAction);
                 entity.HasOne(d => d.ClientPost).WithMany(p => p.WorkerApplications).HasForeignKey(d => d.ClientPostId).OnDelete(DeleteBehavior.NoAction);
-                entity.HasOne(d => d.PaidJob).WithMany(p => p.WorkerApplications).HasForeignKey(d => d.PaidJobId).OnDelete(DeleteBehavior.NoAction);
                 entity.HasOne(d => d.Worker).WithMany(p => p.WorkerApplications).HasForeignKey(d => d.WorkerId).OnDelete(DeleteBehavior.NoAction);
             });
 
