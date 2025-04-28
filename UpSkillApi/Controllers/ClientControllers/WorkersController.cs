@@ -36,11 +36,11 @@ namespace UpSkillApi.Controllers
             return Ok(results);
         }
 
-        // GET: /api/workers/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult<WorkerProfileDto>> GetWorkerProfile(int id)
+        // GET: /api/workers/{userId}
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<WorkerProfileDto>> GetWorkerProfile(int userId)
         {
-            var profile = await _workerRepository.GetWorkerProfileByIdAsync(id);
+            var profile = await _workerRepository.GetWorkerProfileByUserIdAsync(userId);
             if (profile == null)
                 return NotFound();
 

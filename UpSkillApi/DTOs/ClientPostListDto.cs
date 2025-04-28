@@ -8,4 +8,6 @@ public class ClientPostListDto
     public string? Location { get; set; }
     public decimal? Price { get; set; }
     public string ProfessionName { get; set; } = null!;
+    public string ClientName { get; set; } = string.Empty;
+
 }

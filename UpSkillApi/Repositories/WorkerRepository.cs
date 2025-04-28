@@ -59,15 +59,16 @@ namespace UpSkillApi.Repositories
             return result;
         }
 
-        public async Task<WorkerProfileDto?> GetWorkerProfileByIdAsync(int workerId)
+        public async Task<WorkerProfileDto?> GetWorkerProfileByUserIdAsync(int userId)
         {
+            // 🛠️ نحول UserId إلى WorkerId
             var worker = await _context.Workers
                 .Include(w => w.User)
                 .Include(w => w.Profession)
                 .Include(w => w.Ratings)
-                    .ThenInclude(r => r.Client)
-                    .ThenInclude(c => c.User)
-                .FirstOrDefaultAsync(w => w.WorkerId == workerId);
+                .ThenInclude(r => r.Client)
+                .ThenInclude(c => c.User)
+                .FirstOrDefaultAsync(w => w.UserId == userId);
 
             if (worker == null)
                 return null;
@@ -81,10 +82,6 @@ namespace UpSkillApi.Repositories
                 PhoneNumber = worker.User.PhoneNumber,
                 Address = worker.Address,
                 AverageRating = worker.Ratings.Any() ? worker.Ratings.Average(r => r.Score) : 0,
-
-                // Future: ProfileImagePath = worker.ProfileImagePath,
-                // Future: WorkImages = worker.WorkImages.Select(img => img.Path).ToList(),
-
                 Ratings = worker.Ratings.Select(r => new RatingDto
                 {
                     ClientName = r.Client?.User?.Name ?? "Unknown",
@@ -95,7 +92,6 @@ namespace UpSkillApi.Repositories
 
             return profile;
         }
-
         public async Task<List<WorkerByProfessionDto>> FilterWorkersAsync(WorkerFilterDto filter)
         {
             var workersQuery = _context.Workers

@@ -32,6 +32,20 @@ namespace UpSkillApi.Controllers
                 user.Role
             });
         }
+        
+        [HttpPost("register/worker")]
+        public async Task<IActionResult> RegisterWorker([FromForm] RegisterWorkerDto dto)
+        {
+            try
+            {
+                var worker = await _authRepo.RegisterWorkerAsync(dto);
+                return Ok(worker);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
