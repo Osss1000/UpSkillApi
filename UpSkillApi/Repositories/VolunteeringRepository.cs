@@ -202,5 +202,48 @@ namespace UpSkillApi.Repositories
 
             return posts;
         }
+        
+        public async Task<bool> CancelApplicationAsWorkerAsync(int userId, int postId)
+        {
+            var worker = await _context.Workers.FirstOrDefaultAsync(w => w.UserId == userId);
+            if (worker == null)
+            {
+                throw new Exception("العامل غير موجود");
+            }
+            int workerId = worker.WorkerId;
+
+            var application = await _context.VolunteeringApplications
+                .FirstOrDefaultAsync(a => a.WorkerId == workerId && a.VolunteeringJobId == postId);
+
+            if (application == null)
+                return false;
+
+            _context.VolunteeringApplications.Remove(application);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        
+        public async Task<bool> ApplyToVolunteeringPostAsWorkerAsync(ApplyToVolunteeringDto dto)
+        {
+            var worker = await _context.Workers.FirstOrDefaultAsync(w => w.UserId == dto.UserId);
+            if (worker == null)
+            {
+                throw new Exception("العامل غير موجود");
+            }
+            int workerId = worker.WorkerId;
+
+            var application = new VolunteeringApplication
+            {
+                WorkerId = workerId, // ✅ استخدام WorkerId بدلاً من ClientId
+                VolunteeringJobId = dto.VolunteeringJobId,
+                ApplyDate = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow,
+                ApplicationStatusId = (int)ApplicationStatusEnum.Pending
+            };
+
+            _context.VolunteeringApplications.Add(application);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

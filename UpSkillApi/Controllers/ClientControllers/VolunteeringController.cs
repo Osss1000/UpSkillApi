@@ -45,7 +45,7 @@ namespace UpSkillApi.Controllers
         [HttpPost("cancel")]
         public async Task<IActionResult> CancelApplication([FromBody] CancelVolunteeringDto dto)
         {
-            var result = await _volunteeringRepository.CancelApplicationAsync(dto.ClientId, dto.VolunteeringJobId);
+            var result = await _volunteeringRepository.CancelApplicationAsync(dto.UserId, dto.VolunteeringJobId);
             if (!result)
                 return NotFound(new { success = false, message = "التقديم غير موجود" });
 
@@ -66,12 +66,44 @@ namespace UpSkillApi.Controllers
 
             return Ok(profile);
         }
-        
+         
         [HttpGet("volunteering-posts-worker")]
         public async Task<IActionResult> GetVolunteeringPostsForWorker([FromQuery] int workerUserId)
         {
             var posts = await _volunteeringRepository.GetAllVolunteeringPostsForWorkerAsync(workerUserId);
             return Ok(posts);
+        }
+        
+        [HttpPost("apply/worker")]
+        public async Task<IActionResult> ApplyToVolunteeringPostAsWorker([FromBody] ApplyToVolunteeringDto dto)
+        {
+            try
+            {
+                var result = await _volunteeringRepository.ApplyToVolunteeringPostAsWorkerAsync(dto);
+                return result
+                    ? Ok(new { success = true, message = "تم التقديم بنجاح" })
+                    : BadRequest(new { success = false, message = "فشل في التقديم" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+        
+        [HttpPost("cancel/worker")]
+        public async Task<IActionResult> CancelApplicationAsWorker([FromQuery] int userId, [FromQuery] int postId)
+        {
+            try
+            {
+                var result = await _volunteeringRepository.CancelApplicationAsWorkerAsync(userId, postId);
+                return result
+                    ? Ok(new { success = true, message = "تم إلغاء التقديم بنجاح" })
+                    : NotFound(new { success = false, message = "التقديم غير موجود" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
         }
     }
 }

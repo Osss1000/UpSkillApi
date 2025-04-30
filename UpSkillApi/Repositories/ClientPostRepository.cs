@@ -187,25 +187,29 @@ namespace UpSkillApi.Repositories
                 .Include(p => p.Profession)
                 .Include(p => p.Client)
                 .ThenInclude(c => c.User)
-                .Where(p => p.PostStatusId == 1 &&
-                            (ArabicNormalizer.Normalize(p.Title).Contains(normalizedQuery) ||
-                             ArabicNormalizer.Normalize(p.Details ?? "").Contains(normalizedQuery) ||
-                             ArabicNormalizer.Normalize(p.Client.User.Name).Contains(normalizedQuery)))
+                .Where(p => p.PostStatusId == 1)
                 .OrderByDescending(p => p.CreatedDate)
                 .ToListAsync();
 
-            return posts.Select(p => new ClientPostListDto
+            // فلترة بعد تحميل البيانات من الداتا بيز
+            var filteredPosts = posts.Where(p =>
+                ArabicNormalizer.Normalize(p.Title).Contains(normalizedQuery) ||
+                ArabicNormalizer.Normalize(p.Details ?? "").Contains(normalizedQuery) ||
+                ArabicNormalizer.Normalize(p.Client.User.Name).Contains(normalizedQuery)
+            ).ToList();
+
+            return filteredPosts.Select(p => new ClientPostListDto
             {
                 PostId = p.ClientPostId,
                 Title = p.Title,
                 DateAndTime = p.DateAndTime,
                 Location = p.Location ?? "",
+                Details = p.Details ?? "",
                 Price = p.Price,
                 ProfessionName = p.Profession.Name,
                 ClientName = p.Client.User.Name
             }).ToList();
         }
-        
         public async Task<List<ClientPostListDto>> FilterClientPostsAsync(ClientPostFilterDto filter)
         {
             var postsQuery = _context.ClientPosts
