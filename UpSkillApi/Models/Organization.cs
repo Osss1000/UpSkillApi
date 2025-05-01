@@ -17,4 +17,5 @@ public partial class Organization
     public virtual User User { get; set; } = null!;
 
     public virtual ICollection<VolunteeringJob> VolunteeringJobs { get; set; } = new List<VolunteeringJob>();
+    public string CommercialRecordPath { get; internal set; }
 }

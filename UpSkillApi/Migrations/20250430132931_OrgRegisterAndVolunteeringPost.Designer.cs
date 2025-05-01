@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UpSkillApi.Data;
 
@@ -11,9 +12,11 @@ using UpSkillApi.Data;
 namespace UpSkillApi.Migrations
 {
     [DbContext(typeof(UpSkillDbContext))]
-    partial class UpSkillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430132931_OrgRegisterAndVolunteeringPost")]
+    partial class OrgRegisterAndVolunteeringPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,21 +99,21 @@ namespace UpSkillApi.Migrations
                         new
                         {
                             ApplicationStatusId = 1,
-                            CreatedDate = new DateTime(2025, 4, 30, 15, 16, 42, 287, DateTimeKind.Utc).AddTicks(5787),
+                            CreatedDate = new DateTime(2025, 4, 30, 13, 29, 30, 590, DateTimeKind.Utc).AddTicks(5670),
                             Description = "Awaiting review",
                             Status = 1
                         },
                         new
                         {
                             ApplicationStatusId = 2,
-                            CreatedDate = new DateTime(2025, 4, 30, 15, 16, 42, 287, DateTimeKind.Utc).AddTicks(5791),
+                            CreatedDate = new DateTime(2025, 4, 30, 13, 29, 30, 590, DateTimeKind.Utc).AddTicks(5674),
                             Description = "Application accepted",
                             Status = 2
                         },
                         new
                         {
                             ApplicationStatusId = 3,
-                            CreatedDate = new DateTime(2025, 4, 30, 15, 16, 42, 287, DateTimeKind.Utc).AddTicks(5793),
+                            CreatedDate = new DateTime(2025, 4, 30, 13, 29, 30, 590, DateTimeKind.Utc).AddTicks(5675),
                             Description = "Application denied",
                             Status = 3
                         });
@@ -564,9 +567,6 @@ namespace UpSkillApi.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VolunteeringJobId"));
-
-                    b.Property<DateTime>("CompletedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");

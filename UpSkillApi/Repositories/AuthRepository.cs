@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using UpSkillApi.Data;
 using UpSkillApi.DTOs;
@@ -182,6 +183,75 @@ public async Task<WorkerUserDto> RegisterWorkerAsync(RegisterWorkerDto dto)
         throw new Exception("حدث خطأ أثناء تسجيل العامل. الرجاء المحاولة مرة أخرى.");
     }
 }
+
+    public async Task<OrganizationUserDto> RegisterOrgAsync(OrgRegisterDto dto)
+    {
+        if (dto.CommercialRecordImage == null)
+            throw new ArgumentException("يجب رفع صورة السجل التجاري");
+
+        using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            using var hmac = new HMACSHA512();
+
+            var user = new User
+            {
+                Name = dto.Name,
+                Email = dto.Email,
+                Role = "Organization",
+                PasswordSalt = hmac.Key,
+                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password)),
+                CreatedDate = DateTime.UtcNow
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            var CommercialRecordFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/CommercialRecord");
+
+            if (!Directory.Exists(CommercialRecordFolder))
+                Directory.CreateDirectory(CommercialRecordFolder);
+
+      
+            var CommercialFileName = $"{Guid.NewGuid()}_{dto.CommercialRecordImage.FileName}";
+
+            
+            var CommercialPath = Path.Combine(CommercialRecordFolder, CommercialFileName);
+
+            
+
+            using (var stream = new FileStream(CommercialPath, FileMode.Create))
+                await dto.CommercialRecordImage.CopyToAsync(stream);
+
+            var org = new Organization
+            {
+                UserId = user.UserId,
+                Description = dto.Description,
+                CommercialRecordPath = $"/uploads/CommercialRecord/{CommercialFileName}"
+
+            };
+
+            _context.Organizations.Add(org);
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+
+            return new OrganizationUserDto
+            {
+                UserId = user.UserId,
+                Name = user.Name,
+                Email = user.Email,
+                Role = user.Role
+            };
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw new Exception("حدث خطأ أثناء تسجيل المنظمة. الرجاء المحاولة مرة أخرى.");
+        }
+    }
+
+
     public async Task<ClientUserDto?> Login(LoginDto dto)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
@@ -195,14 +265,17 @@ public async Task<WorkerUserDto> RegisterWorkerAsync(RegisterWorkerDto dto)
             if (computedHash[i] != user.PasswordHash[i]) return null;
         }
 
-        
+
 
         return new ClientUserDto
         {
-            UserId = user.UserId,
-            Name = user.Name,
-            Email = user.Email,
-            Role = user.Role
+                UserId = user.UserId,
+                Name = user.Name,
+                Email = user.Email,
+                Role = user.Role
+            
         };
     }
+
+      
 }
