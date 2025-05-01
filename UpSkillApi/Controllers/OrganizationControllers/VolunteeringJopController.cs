@@ -128,11 +128,8 @@ namespace UpSkillApi.Controllers.OrganizationControllers
                 .Include(p=>p.Organization)
                 .ThenInclude(p=>p.User)
                 .Where(p => p.OrganizationId == orgId && p.PostStatusId == 2)
-                .Select(p => new VolunteeringPostDto
+                .Select(p => new CompletedVolunteeringPostDto
                 {
-                    PostId = p.VolunteeringJobId,
-                    OrganizationId = p.OrganizationId,
-                    UserId = p.Organization.UserId,
                     OrganizationName = p.Organization.User.Name,
                     Title = p.Title,
                     Description = p.Description,

@@ -23,11 +23,7 @@ namespace UpSkillApi.Data
         public DbSet<WorkerApplication> WorkerApplications { get; set; }
         public DbSet<Profession> Professions { get; set; }
         public DbSet<PostStatus> PostStatuses { get; set; }
-
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-
-             => optionsBuilder.UseSqlServer("Server=DESKTOP-R7PNJLT\\SQLEXPRESS;Database=UpSkill;Trusted_Connection=True;TrustServerCertificate=Yes;");
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
