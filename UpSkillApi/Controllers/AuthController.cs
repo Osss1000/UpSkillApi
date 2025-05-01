@@ -46,6 +46,21 @@ namespace UpSkillApi.Controllers
             }
         }
 
+        [HttpPost("register/organization")]
+        public async Task<IActionResult> RegisterOrganization([FromForm] OrgRegisterDto dto)
+        {
+            try
+            {
+                var org = await _authRepo.RegisterOrgAsync(dto);
+                return Ok(org);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
