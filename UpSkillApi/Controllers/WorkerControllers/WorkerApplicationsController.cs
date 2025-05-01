@@ -26,9 +26,9 @@ namespace UpSkillApi.Controllers
         }
 
         [HttpPost("cancel-application")]
-        public async Task<IActionResult> CancelApplication([FromQuery] int workerId, [FromQuery] int clientPostId)
+        public async Task<IActionResult> CancelApplication([FromQuery] int userId, [FromQuery] int clientPostId)
         {
-            var success = await _workerApplicationRepository.CancelApplicationAsync(workerId, clientPostId);
+            var success = await _workerApplicationRepository.CancelApplicationAsync(userId, clientPostId);
             if (!success)
                 return NotFound(new { success = false, message = "لم يتم العثور على التقديم" });
 
