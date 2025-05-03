@@ -1,13 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UpSkillApi.Data;
 using UpSkillApi.DTOs;
 using UpSkillApi.Models;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.HttpResults;
-using UpSkillApi.Repositories;
 
 namespace UpSkillApi.Controllers.OrganizationControllers
 {
@@ -139,6 +134,38 @@ namespace UpSkillApi.Controllers.OrganizationControllers
 
                   
 
+                })
+                .ToListAsync();
+
+            return Ok(posts);
+        }
+        
+        
+        [HttpGet("Posted/by-Organization/{userId}")]
+        public async Task<ActionResult> GetPosted(int userId)
+        {
+            var org = await _context.Organizations.FirstOrDefaultAsync(c => c.UserId == userId);
+            if (org == null)
+            {
+                throw new Exception("العميل غير موجود");
+            }
+            int orgId = org.OrganizationId;
+          
+
+            var posts = await _context.VolunteeringJobs
+                .Include(p=>p.Organization)
+                .ThenInclude(p=>p.User)
+                .Where(p => p.OrganizationId == orgId && p.PostStatusId == 1)
+                .Select(p => new PostedVolunteeringPostDto()
+                {
+                    OrganizationName = p.Organization.User.Name,
+                    volunteeringJobId = p.VolunteeringJobId,
+                    Title = p.Title,
+                    Description = p.Description,
+                    Location = p.Location,
+                    DateAndTime = p.DateAndTime,
+                    NumberOfPeopleNeeded=p.NumberOfPeopleNeeded
+                    
                 })
                 .ToListAsync();
 
