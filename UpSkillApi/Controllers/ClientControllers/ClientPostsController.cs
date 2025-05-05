@@ -95,5 +95,15 @@ namespace UpSkillApi.Controllers
             var posts = await _clientPostRepository.FilterClientPostsAsync(filter);
             return Ok(posts);
         }
+        
+        [HttpGet("details/{postId}")]
+        public async Task<IActionResult> GetClientPostDetails(int postId)
+        {
+            var post = await _clientPostRepository.GetClientPostDetailsAsync(postId);
+            if (post == null)
+                return NotFound(new { success = false, message = "البوست غير موجود" });
+
+            return Ok(post);
+        }
     }
 }

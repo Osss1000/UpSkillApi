@@ -249,5 +249,47 @@ namespace UpSkillApi.Repositories
             return result;
         }
         
+        public async Task<ClientPostDetailsDto?> GetClientPostDetailsAsync(int postId)
+        {
+            var post = await _context.ClientPosts
+                .Include(p => p.Profession)
+                .Include(p => p.WorkerApplications)
+                    .ThenInclude(a => a.Worker)
+                        .ThenInclude(w => w.User)
+                .Include(p => p.WorkerApplications)
+                    .ThenInclude(a => a.Worker)
+                        .ThenInclude(w => w.Ratings)
+                .FirstOrDefaultAsync(p => p.ClientPostId == postId);
+
+            if (post == null) return null;
+
+            var dto = new ClientPostDetailsDto
+            {
+                PostId = post.ClientPostId,
+                Title = post.Title,
+                Details = post.Details,
+                DateAndTime = post.DateAndTime,
+                Price = post.Price,
+                Location = post.Location,
+                ProfessionName = post.Profession.Name,
+                Applicants = post.WorkerApplications
+                    .Select(a => a.Worker)
+                    .Select(w => new WorkerApplicantDto
+                    {
+                        WorkerId = w.WorkerId,
+                        UserId = w.UserId, // ✅ مهم
+                        FullName = w.User.Name,
+                        Bio = w.User.Bio,
+                        Location = w.Address,
+                        ExperienceYears = w.Experience,
+                        AverageRating = w.Ratings.Any() 
+                            ? Math.Round(w.Ratings.Average(r => r.Score), 1) 
+                            : null
+                    })
+                    .ToList()
+            };
+
+            return dto;
+        }        
     }
 }
