@@ -15,10 +15,11 @@ namespace UpSkillApi.DTOs
     public class WorkerApplicantDto
     {
         public int WorkerId { get; set; }
+        public int UserId { get; set; }  // ✅ هنرجعه للشات أو غيره
         public string FullName { get; set; } = null!;
         public string? Bio { get; set; }
         public string? Location { get; set; }
-        public double? AverageRating { get; set; }
         public int? ExperienceYears { get; set; }
+        public double? AverageRating { get; set; }
     }
 }
