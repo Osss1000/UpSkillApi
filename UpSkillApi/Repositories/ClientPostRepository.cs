@@ -154,14 +154,21 @@ namespace UpSkillApi.Repositories
 
             return posts;
         }        
-        public async Task<List<ActiveClientPostDto>> GetAllActiveClientPostsAsync()
+        public async Task<List<ActiveClientPostDto>> GetAllActiveClientPostsAsync(int userId)
         {
+            var worker = await _context.Workers.FirstOrDefaultAsync(c => c.UserId == userId);
+            if (worker == null)
+            {
+                throw new Exception("العميل غير موجود");
+            }
+            int workerId = worker.WorkerId;
+
             var posts = await _context.ClientPosts
+                .Where(p => p.PostStatusId == 1) // ✅ Posted
                 .Include(p => p.Profession)
                 .Include(p => p.Client)
                 .ThenInclude(c => c.User)
-                .Where(p => p.PostStatusId == 1) // ✅ يعني Posted
-                .OrderByDescending(p => p.CreatedDate)
+                .Include(p => p.WorkerApplications)
                 .Select(p => new ActiveClientPostDto
                 {
                     PostId = p.ClientPostId,
@@ -171,7 +178,8 @@ namespace UpSkillApi.Repositories
                     Location = p.Location ?? "",
                     Price = p.Price ?? 0,
                     ProfessionName = p.Profession.Name,
-                    ClientName = p.Client.User.Name // ✅ اسم العميل
+                    ClientName = p.Client.User.Name,
+                    IsApplied = p.WorkerApplications.Any(a => a.WorkerId == workerId)
                 })
                 .ToListAsync();
 
@@ -290,6 +298,30 @@ namespace UpSkillApi.Repositories
             };
 
             return dto;
-        }        
+        }   
+        
+        public async Task<bool> UpdateWorkerApplicationStatusAsync(UpdateWorkerApplicationStatusDto dto)
+        {
+            if (!Enum.TryParse<ApplicationStatusEnum>(dto.Status, true, out var statusEnum))
+                return false;
+
+            // هات الـ WorkerId من الـ UserId
+            var worker = await _context.Workers.FirstOrDefaultAsync(w => w.UserId == dto.WorkerUserId);
+            if (worker == null)
+                return false;
+
+            // هات التقديم بتاعه على البوست
+            var application = await _context.WorkerApplications
+                .FirstOrDefaultAsync(a => a.ClientPostId == dto.ClientPostId && a.WorkerId == worker.WorkerId);
+            if (application == null)
+                return false;
+
+            application.ApplicationStatusId = (int)statusEnum;
+            application.ModifiedDate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        
     }
 }

@@ -15,51 +15,93 @@ namespace UpSkillApi.Controllers
             _authRepo = authRepo;
         }
 
-        [HttpPost("register/client")]
-        public async Task<IActionResult> RegisterClient([FromForm] RegisterClientDto dto)
+        [HttpPost("start-registration/client")]
+        public async Task<IActionResult> StartClientRegistration([FromForm] RegisterClientDto dto)
         {
-            if (await _authRepo.UserExists(dto.Email))
-                return BadRequest("Email already exists");
-
-            var user = await _authRepo.RegisterClientAsync(dto);
-
-            return Ok(new
+            try
             {
-                user.UserId,
-                user.Name,
-                user.Email,
-                user.Role
-            });
+                await _authRepo.StartClientRegistrationAsync(dto);
+                return Ok(new { message = "تم إرسال كود التفعيل إلى البريد الإلكتروني." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
         }
         
-        [HttpPost("register/worker")]
-        public async Task<IActionResult> RegisterWorker([FromForm] RegisterWorkerDto dto)
+        [HttpPost("verify-registration/client")]
+        public async Task<IActionResult> VerifyClientRegistration([FromBody] EmailVerificationDto dto)
         {
             try
             {
-                var worker = await _authRepo.RegisterWorkerAsync(dto);
-                return Ok(worker);
+                var user = await _authRepo.CompleteClientRegistrationAsync(dto);
+                return Ok(user);
             }
             catch (Exception ex)
             {
                 return BadRequest(new { success = false, message = ex.Message });
             }
         }
-
-        [HttpPost("register/organization")]
-        public async Task<IActionResult> RegisterOrganization([FromForm] OrgRegisterDto dto)
+        
+        [HttpPost("start-registration/worker")]
+        public async Task<IActionResult> StartWorkerRegistration([FromForm] RegisterWorkerDto dto)
         {
             try
             {
-                var org = await _authRepo.RegisterOrgAsync(dto);
-                return Ok(org);
+                await _authRepo.StartWorkerRegistrationAsync(dto);
+                return Ok(new { message = "تم إرسال كود التفعيل إلى البريد الإلكتروني." });
             }
             catch (Exception ex)
             {
                 return BadRequest(new { success = false, message = ex.Message });
             }
         }
-
+        
+        [HttpPost("verify-registration/worker")]
+        public async Task<IActionResult> VerifyWorkerRegistration([FromBody] EmailVerificationDto dto)
+        {
+            try
+            {
+                var user = await _authRepo.CompleteWorkerRegistrationAsync(dto);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+        
+        [HttpPost("start-registration/organization")]
+        public async Task<IActionResult> StartOrganizationRegistration([FromForm] OrgRegisterDto dto)
+        {
+            try
+            {
+                await _authRepo.StartOrganizationRegistrationAsync(dto);
+                return Ok(new { message = "تم إرسال كود التفعيل إلى البريد الإلكتروني." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.InnerException?.Message ?? ex.Message
+                });
+            }
+        }
+        
+        [HttpPost("verify-registration/organization")]
+        public async Task<IActionResult> VerifyOrganizationRegistration([FromBody] EmailVerificationDto dto)
+        {
+            try
+            {
+                var user = await _authRepo.CompleteOrganizationRegistrationAsync(dto);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)

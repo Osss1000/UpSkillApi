@@ -10,5 +10,6 @@ namespace UpSkillApi.DTOs
         public decimal Price { get; set; }
         public string ProfessionName { get; set; } = string.Empty;
         public string ClientName { get; set; } = string.Empty; // ✅ جديد
+        public bool IsApplied { get; set; }
     }
 }

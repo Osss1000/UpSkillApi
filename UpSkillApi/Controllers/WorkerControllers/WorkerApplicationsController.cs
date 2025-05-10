@@ -20,9 +20,9 @@ namespace UpSkillApi.Controllers
         {
             var success = await _workerApplicationRepository.ApplyToClientPostAsync(dto);
             if (!success)
-                return BadRequest(new { success = false, message = "فشل التقديم على البوست" });
+                return BadRequest(new { isApplied = false, message = "فشل التقديم على البوست" });
 
-            return Ok(new { success = true, message = "تم التقديم على البوست بنجاح" });
+            return Ok(new { isApplied = true, message = "تم التقديم على البوست بنجاح" });
         }
 
         [HttpPost("cancel-application")]
@@ -30,9 +30,16 @@ namespace UpSkillApi.Controllers
         {
             var success = await _workerApplicationRepository.CancelApplicationAsync(userId, clientPostId);
             if (!success)
-                return NotFound(new { success = false, message = "لم يتم العثور على التقديم" });
+                return NotFound(new { isApplied = false, message = "لم يتم العثور على التقديم" });
 
-            return Ok(new { success = true, message = "تم إلغاء التقديم بنجاح" });
+            return Ok(new { isApplied = true, message = "تم إلغاء التقديم بنجاح" });
+        }
+        
+        [HttpGet("applied-client-posts/{userId}")]
+        public async Task<IActionResult> GetAppliedClientPosts(int userId)
+        {
+            var posts = await _workerApplicationRepository.GetClientPostsAppliedByWorkerAsync(userId);
+            return Ok(posts);
         }
     }
 }

@@ -29,4 +29,8 @@ public partial class User
     public virtual Organization? Organization { get; set; }
 
     public virtual Worker? Worker { get; set; }
+    
+    public bool EmailConfirmed { get; set; } = false;
+    public string? EmailVerificationCode { get; set; }
+    public DateTime? VerificationCodeExpiry { get; set; }
 }

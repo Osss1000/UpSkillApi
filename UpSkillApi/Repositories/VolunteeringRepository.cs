@@ -24,6 +24,7 @@ namespace UpSkillApi.Repositories
             int clientId = client.ClientId;
 
             var posts = await _context.VolunteeringJobs
+                .Where(p=>p.PostStatusId==1)
                 .Include(p => p.Organization)
                 .ThenInclude(o => o.User)
                 .Include(p => p.VolunteeringApplications)
@@ -36,6 +37,7 @@ namespace UpSkillApi.Repositories
                     Title = p.Title,
                     Description = p.Description,
                     Location = p.Location,
+                    NumberOfPeopleNeeded = p.NumberOfPeopleNeeded,
                     DateAndTime = p.DateAndTime,
                     IsApplied = p.VolunteeringApplications.Any(a => a.ClientId == clientId) // ✅ زي ما هو
                 })
@@ -125,19 +127,30 @@ namespace UpSkillApi.Repositories
         }
         public async Task<List<VolunteeringPostDto>> GetAppliedVolunteeringPostsAsync(int userId)
         {
-            // 🛠️ نحول ال UserId إلى ClientId
-            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserId == userId);
-            if (client == null)
-            {
-                throw new Exception("العميل غير موجود");
-            }
-            int clientId = client.ClientId;
+            // الحصول على ClientId و WorkerId (لو موجودين)
+            int? clientId = (await _context.Clients.FirstOrDefaultAsync(c => c.UserId == userId))?.ClientId;
+            int? workerId = (await _context.Workers.FirstOrDefaultAsync(w => w.UserId == userId))?.WorkerId;
 
-            var posts = await _context.VolunteeringApplications
-                .Where(a => a.ClientId == clientId)
+            // جلب كل الأبليكيشنز المرتبطة بالمستخدم
+            var applications = _context.VolunteeringApplications
                 .Include(a => a.VolunteeringJob)
                 .ThenInclude(j => j.Organization)
                 .ThenInclude(o => o.User)
+                .Include(a => a.ApplicationStatus)
+                .AsQueryable();
+
+            // فلترة حسب النوع
+            if (clientId.HasValue && workerId.HasValue)
+                applications = applications.Where(a => a.ClientId == clientId.Value || a.WorkerId == workerId.Value);
+            else if (clientId.HasValue)
+                applications = applications.Where(a => a.ClientId == clientId.Value);
+            else if (workerId.HasValue)
+                applications = applications.Where(a => a.WorkerId == workerId.Value);
+            else
+                return new List<VolunteeringPostDto>(); // المستخدم مش عميل ولا عامل
+
+            // تحويل البيانات إلى DTO
+            var posts = await applications
                 .Select(a => new VolunteeringPostDto
                 {
                     PostId = a.VolunteeringJob.VolunteeringJobId,
@@ -147,8 +160,10 @@ namespace UpSkillApi.Repositories
                     Title = a.VolunteeringJob.Title,
                     Description = a.VolunteeringJob.Description,
                     Location = a.VolunteeringJob.Location,
+                    NumberOfPeopleNeeded = a.VolunteeringJob.NumberOfPeopleNeeded,
                     DateAndTime = a.VolunteeringJob.DateAndTime ?? DateTime.MinValue,
-                    IsApplied = true 
+                    IsApplied = true,
+                    ApplicationStatus = a.ApplicationStatus.StatusEnum.ToString() // ✅ إرجاع الحالة من enum
                 })
                 .ToListAsync();
 
@@ -183,6 +198,7 @@ namespace UpSkillApi.Repositories
             int workerId = worker.WorkerId;
 
             var posts = await _context.VolunteeringJobs
+                .Where(p=>p.PostStatusId==1)
                 .Include(p => p.Organization)
                 .ThenInclude(o => o.User)
                 .Include(p => p.VolunteeringApplications)
@@ -195,6 +211,7 @@ namespace UpSkillApi.Repositories
                     Title = p.Title,
                     Description = p.Description,
                     Location = p.Location,
+                    NumberOfPeopleNeeded = p.NumberOfPeopleNeeded,
                     DateAndTime = p.DateAndTime,
                     IsApplied = p.VolunteeringApplications.Any(a => a.WorkerId == workerId) // ✅
                 })

@@ -20,62 +20,102 @@ public class AuthRepository
         return await _context.Users.AnyAsync(u => u.Email == email);
     }
 
-    public async Task<ClientUserDto> RegisterClientAsync(RegisterClientDto dto)
+    public async Task<bool> StartClientRegistrationAsync(RegisterClientDto dto)
     {
+        if (await UserExists(dto.Email))
+            throw new Exception("البريد الإلكتروني مستخدم بالفعل.");
+
         if (dto.FrontNationalIdImage == null || dto.BackNationalIdImage == null)
-            throw new ArgumentException("يجب رفع صورتي البطاقة (الأمامية والخلفية)");
+            throw new Exception("يجب رفع صورتي البطاقة.");
+
+        // حفظ الصور
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/nationalIds");
+        if (!Directory.Exists(uploadsFolder))
+            Directory.CreateDirectory(uploadsFolder);
+
+        var frontFileName = $"{Guid.NewGuid()}_{dto.FrontNationalIdImage.FileName}";
+        var backFileName = $"{Guid.NewGuid()}_{dto.BackNationalIdImage.FileName}";
+
+        var frontPath = Path.Combine(uploadsFolder, frontFileName);
+        var backPath = Path.Combine(uploadsFolder, backFileName);
+
+        await using (var stream = new FileStream(frontPath, FileMode.Create))
+            await dto.FrontNationalIdImage.CopyToAsync(stream);
+
+        await using (var stream = new FileStream(backPath, FileMode.Create))
+            await dto.BackNationalIdImage.CopyToAsync(stream);
+
+        var otp = new Random().Next(100000, 999999).ToString();
+
+        var pending = new PendingRegistration
+        {
+            Role = "client",
+            Email = dto.Email,
+            FullName = dto.Name,
+            PhoneNumber = dto.PhoneNumber,
+            Password = dto.Password,
+            OTP = otp,
+            Expiry = DateTime.UtcNow.AddMinutes(10),
+            NationalId = dto.NationalId,
+            Address = dto.Address,
+            FrontNationalIdPath = $"/uploads/nationalIds/{frontFileName}",
+            BackNationalIdPath = $"/uploads/nationalIds/{backFileName}"
+        };
+
+        _context.PendingRegistrations.Add(pending);
+        await _context.SaveChangesAsync();
+
+        await EmailService.SendAsync(dto.Email, "OTP Verification", $"Your OTP is: <b>{otp}</b>");
+
+        return true;
+    }    
+    
+    public async Task<ClientUserDto> CompleteClientRegistrationAsync(EmailVerificationDto dto)
+    {
+        var pending = await _context.PendingRegistrations
+            .FirstOrDefaultAsync(p => p.Email == dto.Email && p.Role == "client");
+
+        if (pending == null)
+            throw new Exception("لا يوجد تسجيل مؤقت لهذا البريد.");
+
+        if (pending.OTP != dto.OTP || pending.Expiry < DateTime.UtcNow)
+            throw new Exception("كود التفعيل غير صحيح أو منتهي.");
 
         using var transaction = await _context.Database.BeginTransactionAsync();
+
         try
         {
             using var hmac = new HMACSHA512();
 
             var user = new User
             {
-                Name = dto.Name,
-                Email = dto.Email,
-                PhoneNumber = dto.PhoneNumber,
+                Name = pending.FullName,
+                Email = pending.Email,
+                PhoneNumber = pending.PhoneNumber,
                 Role = "client",
                 PasswordSalt = hmac.Key,
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password)),
-                CreatedDate = DateTime.UtcNow
+                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(pending.Password)),
+                CreatedDate = DateTime.UtcNow,
+                EmailConfirmed = true 
+
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/nationalIds");
-            if (!Directory.Exists(uploadsFolder))
-                Directory.CreateDirectory(uploadsFolder);
-
-            var frontFileName = $"{Guid.NewGuid()}_{dto.FrontNationalIdImage.FileName}";
-            var backFileName = $"{Guid.NewGuid()}_{dto.BackNationalIdImage.FileName}";
-
-            var frontPath = Path.Combine(uploadsFolder, frontFileName);
-            var backPath = Path.Combine(uploadsFolder, backFileName);
-
-            using (var stream = new FileStream(frontPath, FileMode.Create))
-            {
-                await dto.FrontNationalIdImage.CopyToAsync(stream);
-            }
-
-            using (var stream = new FileStream(backPath, FileMode.Create))
-            {
-                await dto.BackNationalIdImage.CopyToAsync(stream);
-            }
-
             var client = new Client
             {
                 UserId = user.UserId,
-                NationalId = dto.NationalId,
-                Address = dto.Address,
-                FrontNationalIdPath = $"/uploads/nationalIds/{frontFileName}",
-                BackNationalIdPath = $"/uploads/nationalIds/{backFileName}"
+                NationalId = pending.NationalId!,
+                Address = pending.Address!,
+                FrontNationalIdPath = pending.FrontNationalIdPath!,
+                BackNationalIdPath = pending.BackNationalIdPath!
             };
 
             _context.Clients.Add(client);
-            await _context.SaveChangesAsync();
+            _context.PendingRegistrations.Remove(pending);
 
+            await _context.SaveChangesAsync();
             await transaction.CommitAsync();
 
             return new ClientUserDto
@@ -86,87 +126,125 @@ public class AuthRepository
                 Role = user.Role
             };
         }
-        catch (DbUpdateException ex) when (ex.InnerException != null && ex.InnerException.Message.Contains("IX_Clients_NationalId"))
+        catch
         {
             await transaction.RollbackAsync();
-            throw new Exception("رقم البطاقة مستخدم من قبل. الرجاء التأكد من صحة البيانات.");
-        }
-        catch (Exception)
-        {
-            await transaction.RollbackAsync();
-            throw new Exception("حدث خطأ أثناء تسجيل الحساب. الرجاء المحاولة مرة أخرى.");
+            throw new Exception("حدث خطأ أثناء إتمام التسجيل.");
         }
     }
     
-public async Task<WorkerUserDto> RegisterWorkerAsync(RegisterWorkerDto dto)
+    public async Task<bool> StartWorkerRegistrationAsync(RegisterWorkerDto dto)
 {
+    if (await UserExists(dto.Email))
+        throw new Exception("البريد الإلكتروني مستخدم بالفعل.");
+
     if (dto.FrontNationalIdImage == null || dto.BackNationalIdImage == null || dto.ClearanceCertificateImage == null)
-        throw new ArgumentException("يجب رفع صورتي البطاقة وصورة السجل الجنائي");
+        throw new Exception("يجب رفع صورتي البطاقة وصورة الفيش.");
+
+    // حفظ الصور
+    var nationalIdFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/nationalIds");
+    var clearanceFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/clearanceCertificates");
+
+    Directory.CreateDirectory(nationalIdFolder);
+    Directory.CreateDirectory(clearanceFolder);
+
+    var frontFileName = $"{Guid.NewGuid()}_{dto.FrontNationalIdImage.FileName}";
+    var backFileName = $"{Guid.NewGuid()}_{dto.BackNationalIdImage.FileName}";
+    var clearanceFileName = $"{Guid.NewGuid()}_{dto.ClearanceCertificateImage.FileName}";
+
+    var frontPath = Path.Combine(nationalIdFolder, frontFileName);
+    var backPath = Path.Combine(nationalIdFolder, backFileName);
+    var clearancePath = Path.Combine(clearanceFolder, clearanceFileName);
+
+    await using (var stream = new FileStream(frontPath, FileMode.Create))
+        await dto.FrontNationalIdImage.CopyToAsync(stream);
+    await using (var stream = new FileStream(backPath, FileMode.Create))
+        await dto.BackNationalIdImage.CopyToAsync(stream);
+    await using (var stream = new FileStream(clearancePath, FileMode.Create))
+        await dto.ClearanceCertificateImage.CopyToAsync(stream);
+
+    var otp = new Random().Next(100000, 999999).ToString();
+
+    var pending = new PendingRegistration
+    {
+        Role = "worker",
+        Email = dto.Email,
+        FullName = dto.Name,
+        PhoneNumber = dto.PhoneNumber,
+        Password = dto.Password,
+        OTP = otp,
+        Expiry = DateTime.UtcNow.AddMinutes(10),
+        NationalId = dto.NationalId,
+        Address = dto.Address,
+        ProfessionName = dto.ProfessionName,
+        HourlyRate = dto.HourlyRate,
+        Experience = dto.Experience,
+        FrontNationalIdPath = $"/uploads/nationalIds/{frontFileName}",
+        BackNationalIdPath = $"/uploads/nationalIds/{backFileName}",
+        ClearanceCertificatePath = $"/uploads/clearanceCertificates/{clearanceFileName}"
+    };
+
+    _context.PendingRegistrations.Add(pending);
+    await _context.SaveChangesAsync();
+
+    await EmailService.SendAsync(dto.Email, "OTP Verification", $"Your OTP is: <b>{otp}</b>");
+
+    return true;
+}
+    
+    public async Task<WorkerUserDto> CompleteWorkerRegistrationAsync(EmailVerificationDto dto)
+{
+    var pending = await _context.PendingRegistrations
+        .FirstOrDefaultAsync(p => p.Email == dto.Email && p.Role == "worker");
+
+    if (pending == null)
+        throw new Exception("لا يوجد تسجيل مؤقت لهذا البريد.");
+
+    if (pending.OTP != dto.OTP || pending.Expiry < DateTime.UtcNow)
+        throw new Exception("كود التفعيل غير صحيح أو منتهي.");
 
     using var transaction = await _context.Database.BeginTransactionAsync();
+
     try
     {
         using var hmac = new HMACSHA512();
 
         var user = new User
         {
-            Name = dto.Name,
-            Email = dto.Email,
-            PhoneNumber = dto.PhoneNumber,
-            Role = "Worker",
+            Name = pending.FullName,
+            Email = pending.Email,
+            PhoneNumber = pending.PhoneNumber,
+            Role = "worker",
             PasswordSalt = hmac.Key,
-            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password)),
-            CreatedDate = DateTime.UtcNow
+            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(pending.Password)),
+            CreatedDate = DateTime.UtcNow,
+            EmailConfirmed = true 
         };
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        var nationalIdFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/nationalIds");
-        var clearanceFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/clearanceCertificates");
-
-        if (!Directory.Exists(nationalIdFolder))
-            Directory.CreateDirectory(nationalIdFolder);
-        if (!Directory.Exists(clearanceFolder))
-            Directory.CreateDirectory(clearanceFolder);
-
-        var frontFileName = $"{Guid.NewGuid()}_{dto.FrontNationalIdImage.FileName}";
-        var backFileName = $"{Guid.NewGuid()}_{dto.BackNationalIdImage.FileName}";
-        var clearanceFileName = $"{Guid.NewGuid()}_{dto.ClearanceCertificateImage.FileName}";
-
-        var frontPath = Path.Combine(nationalIdFolder, frontFileName);
-        var backPath = Path.Combine(nationalIdFolder, backFileName);
-        var clearancePath = Path.Combine(clearanceFolder, clearanceFileName);
-
-        using (var stream = new FileStream(frontPath, FileMode.Create))
-            await dto.FrontNationalIdImage.CopyToAsync(stream);
-
-        using (var stream = new FileStream(backPath, FileMode.Create))
-            await dto.BackNationalIdImage.CopyToAsync(stream);
-
-        using (var stream = new FileStream(clearancePath, FileMode.Create))
-            await dto.ClearanceCertificateImage.CopyToAsync(stream);
-
-        var profession = await _context.Professions.FirstOrDefaultAsync(p => p.Name == dto.ProfessionName);
+        var profession = await _context.Professions.FirstOrDefaultAsync(p => p.Name == pending.ProfessionName);
         if (profession == null)
-            throw new Exception("المهنة غير موجودة");
+            throw new Exception("المهنة غير موجودة.");
 
         var worker = new Worker
         {
             UserId = user.UserId,
-            NationalId = dto.NationalId,
-            Address = dto.Address,
-            HourlyRate = dto.HourlyRate,
-            Experience = dto.Experience,
-            ProfessionId = profession.ProfessionId, // 🧠 خدنا الـ ID من الاسم
-            FrontNationalIdPath = $"/uploads/nationalIds/{frontFileName}",
-            BackNationalIdPath = $"/uploads/nationalIds/{backFileName}",
-            ClearanceCertificatePath = $"/uploads/clearanceCertificates/{clearanceFileName}"
+            NationalId = pending.NationalId!,
+            Address = pending.Address!,
+            HourlyRate = pending.HourlyRate!.Value,
+            Experience = pending.Experience!,
+            ProfessionId = profession.ProfessionId,
+            FrontNationalIdPath = pending.FrontNationalIdPath!,
+            BackNationalIdPath = pending.BackNationalIdPath!,
+            ClearanceCertificatePath = pending.ClearanceCertificatePath!
         };
 
         _context.Workers.Add(worker);
-        await _context.SaveChangesAsync();
+        _context.PendingRegistrations.Remove(pending);
 
+        await _context.SaveChangesAsync();
         await transaction.CommitAsync();
 
         return new WorkerUserDto
@@ -177,63 +255,97 @@ public async Task<WorkerUserDto> RegisterWorkerAsync(RegisterWorkerDto dto)
             Role = user.Role
         };
     }
-    catch (Exception)
+    catch
     {
         await transaction.RollbackAsync();
-        throw new Exception("حدث خطأ أثناء تسجيل العامل. الرجاء المحاولة مرة أخرى.");
+        throw new Exception("حدث خطأ أثناء إتمام تسجيل العامل.");
     }
 }
-
-    public async Task<OrganizationUserDto> RegisterOrgAsync(OrgRegisterDto dto)
+    
+    public async Task<bool> StartOrganizationRegistrationAsync(OrgRegisterDto dto)
     {
+        if (await UserExists(dto.Email))
+            throw new Exception("البريد الإلكتروني مستخدم بالفعل.");
+
         if (dto.CommercialRecordImage == null)
-            throw new ArgumentException("يجب رفع صورة السجل التجاري");
+            throw new Exception("يجب رفع صورة السجل التجاري.");
+
+        var recordFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/CommercialRecord");
+        if (!Directory.Exists(recordFolder))
+            Directory.CreateDirectory(recordFolder);
+
+        var recordFileName = $"{Guid.NewGuid()}_{dto.CommercialRecordImage.FileName}";
+        var recordPath = Path.Combine(recordFolder, recordFileName);
+
+        await using (var stream = new FileStream(recordPath, FileMode.Create))
+            await dto.CommercialRecordImage.CopyToAsync(stream);
+
+        var otp = new Random().Next(100000, 999999).ToString();
+
+        var pending = new PendingRegistration
+        {
+            Role = "organization",
+            Email = dto.Email,
+            FullName = dto.Name,
+            Password = dto.Password,
+            PhoneNumber = dto.PhoneNumber,
+            OTP = otp,
+            Expiry = DateTime.UtcNow.AddMinutes(10),
+            Description = dto.Description,
+            CommercialRecordPath = $"/uploads/CommercialRecord/{recordFileName}"
+        };
+
+        _context.PendingRegistrations.Add(pending);
+        await _context.SaveChangesAsync();
+
+        await EmailService.SendAsync(dto.Email, "OTP Verification", $"Your OTP is: <b>{otp}</b>");
+
+        return true;
+    }
+    
+    public async Task<OrganizationUserDto> CompleteOrganizationRegistrationAsync(EmailVerificationDto dto)
+    {
+        var pending = await _context.PendingRegistrations
+            .FirstOrDefaultAsync(p => p.Email == dto.Email && p.Role == "organization");
+
+        if (pending == null)
+            throw new Exception("لا يوجد تسجيل مؤقت لهذا البريد.");
+
+        if (pending.OTP != dto.OTP || pending.Expiry < DateTime.UtcNow)
+            throw new Exception("كود التفعيل غير صحيح أو منتهي.");
 
         using var transaction = await _context.Database.BeginTransactionAsync();
+
         try
         {
             using var hmac = new HMACSHA512();
 
             var user = new User
             {
-                Name = dto.Name,
-                Email = dto.Email,
-                Role = "Organization",
+                Name = pending.FullName,
+                Email = pending.Email,
+                Role = "organization",
                 PasswordSalt = hmac.Key,
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password)),
-                CreatedDate = DateTime.UtcNow
+                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(pending.Password)),
+                CreatedDate = DateTime.UtcNow,
+                EmailConfirmed = true 
+
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            var CommercialRecordFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/CommercialRecord");
-
-            if (!Directory.Exists(CommercialRecordFolder))
-                Directory.CreateDirectory(CommercialRecordFolder);
-
-      
-            var CommercialFileName = $"{Guid.NewGuid()}_{dto.CommercialRecordImage.FileName}";
-
-            
-            var CommercialPath = Path.Combine(CommercialRecordFolder, CommercialFileName);
-
-            
-
-            using (var stream = new FileStream(CommercialPath, FileMode.Create))
-                await dto.CommercialRecordImage.CopyToAsync(stream);
-
             var org = new Organization
             {
                 UserId = user.UserId,
-                Description = dto.Description,
-                CommercialRecordPath = $"/uploads/CommercialRecord/{CommercialFileName}"
-
+                Description = pending.Description!,
+                CommercialRecordPath = pending.CommercialRecordPath!
             };
 
             _context.Organizations.Add(org);
-            await _context.SaveChangesAsync();
+            _context.PendingRegistrations.Remove(pending);
 
+            await _context.SaveChangesAsync();
             await transaction.CommitAsync();
 
             return new OrganizationUserDto
@@ -244,18 +356,20 @@ public async Task<WorkerUserDto> RegisterWorkerAsync(RegisterWorkerDto dto)
                 Role = user.Role
             };
         }
-        catch (Exception)
+        catch
         {
             await transaction.RollbackAsync();
-            throw new Exception("حدث خطأ أثناء تسجيل المنظمة. الرجاء المحاولة مرة أخرى.");
+            throw new Exception("حدث خطأ أثناء إتمام تسجيل المنظمة.");
         }
     }
-
 
     public async Task<ClientUserDto?> Login(LoginDto dto)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
         if (user == null) return null;
+        
+        // if (!user.EmailConfirmed)         علشان ادخل ال confirmed بس 
+        //     return null;
 
         using var hmac = new HMACSHA512(user.PasswordSalt);
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password));
