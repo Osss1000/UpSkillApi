@@ -76,9 +76,9 @@ namespace UpSkillApi.Controllers
         }
         
         [HttpGet("active-posts")]
-        public async Task<IActionResult> GetAllActiveClientPosts()
+        public async Task<IActionResult> GetAllActiveClientPosts([FromQuery] int userId)
         {
-            var posts = await _clientPostRepository.GetAllActiveClientPostsAsync();
+            var posts = await _clientPostRepository.GetAllActiveClientPostsAsync(userId);
             return Ok(posts);
         }
         
@@ -105,5 +105,16 @@ namespace UpSkillApi.Controllers
 
             return Ok(post);
         }
+        
+        [HttpPut("client-posts/update-application-status")]
+        public async Task<IActionResult> UpdateWorkerApplicationStatus([FromBody] UpdateWorkerApplicationStatusDto dto)
+        {
+            var result = await _clientPostRepository.UpdateWorkerApplicationStatusAsync(dto);
+            if (!result)
+                return BadRequest(new { success = false, message = "فشل في تحديث حالة الطلب" });
+
+            return Ok(new { success = true, message = "تم تحديث حالة الطلب بنجاح" });
+        }
+
     }
 }

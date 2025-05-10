@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UpSkillApi.Data;
 
@@ -11,9 +12,11 @@ using UpSkillApi.Data;
 namespace UpSkillApi.Migrations
 {
     [DbContext(typeof(UpSkillDbContext))]
-    partial class UpSkillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250509152432_AddPendingRegistrationTable")]
+    partial class AddPendingRegistrationTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,8 +52,8 @@ namespace UpSkillApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Experience")
-                        .HasColumnType("int");
+                    b.Property<string>("Experience")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Expiry")
                         .HasColumnType("datetime2");
@@ -69,6 +72,7 @@ namespace UpSkillApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OTP")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
@@ -165,21 +169,21 @@ namespace UpSkillApi.Migrations
                         new
                         {
                             ApplicationStatusId = 1,
-                            CreatedDate = new DateTime(2025, 5, 10, 4, 56, 52, 176, DateTimeKind.Utc).AddTicks(6020),
+                            CreatedDate = new DateTime(2025, 5, 9, 15, 24, 32, 683, DateTimeKind.Utc).AddTicks(930),
                             Description = "Awaiting review",
                             Status = 1
                         },
                         new
                         {
                             ApplicationStatusId = 2,
-                            CreatedDate = new DateTime(2025, 5, 10, 4, 56, 52, 176, DateTimeKind.Utc).AddTicks(6020),
+                            CreatedDate = new DateTime(2025, 5, 9, 15, 24, 32, 683, DateTimeKind.Utc).AddTicks(930),
                             Description = "Application accepted",
                             Status = 2
                         },
                         new
                         {
                             ApplicationStatusId = 3,
-                            CreatedDate = new DateTime(2025, 5, 10, 4, 56, 52, 176, DateTimeKind.Utc).AddTicks(6030),
+                            CreatedDate = new DateTime(2025, 5, 9, 15, 24, 32, 683, DateTimeKind.Utc).AddTicks(930),
                             Description = "Application denied",
                             Status = 3
                         });

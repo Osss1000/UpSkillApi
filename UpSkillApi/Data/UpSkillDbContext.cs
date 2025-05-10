@@ -23,6 +23,7 @@ namespace UpSkillApi.Data
         public DbSet<WorkerApplication> WorkerApplications { get; set; }
         public DbSet<Profession> Professions { get; set; }
         public DbSet<PostStatus> PostStatuses { get; set; }
+        public DbSet<PendingRegistration> PendingRegistrations { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

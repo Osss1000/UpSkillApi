@@ -58,5 +58,38 @@ namespace UpSkillApi.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+        
+        public async Task<List<AppliedClientPostDto>> GetClientPostsAppliedByWorkerAsync(int userId)
+        {
+            int? workerId = (await _context.Workers.FirstOrDefaultAsync(w => w.UserId == userId))?.WorkerId;
+            if (!workerId.HasValue)
+                return new List<AppliedClientPostDto>();
+
+            var applications = _context.WorkerApplications
+                .Include(a => a.ClientPost)
+                .ThenInclude(p => p.Client)
+                .ThenInclude(c => c.User)
+                .Include(a => a.ApplicationStatus)
+                .Where(a => a.WorkerId == workerId.Value && a.ClientPostId.HasValue);
+
+            var posts = await applications
+                .Select(a => new AppliedClientPostDto
+                {
+                    PostId = a.ClientPost!.ClientPostId,
+                    ClientId = a.ClientPost.ClientId,
+                    UserId = a.ClientPost.Client.UserId,
+                    ClientName = a.ClientPost.Client.User.Name,
+                    Title = a.ClientPost.Title,
+                    Details = a.ClientPost.Details,
+                    Location = a.ClientPost.Location,
+                    Price = a.ClientPost.Price,
+                    DateAndTime = a.ClientPost.DateAndTime ?? DateTime.MinValue,
+                    IsApplied = true,
+                    ApplicationStatus = a.ApplicationStatus.StatusEnum.ToString()
+                })
+                .ToListAsync();
+
+            return posts;
+        }
     }
 }

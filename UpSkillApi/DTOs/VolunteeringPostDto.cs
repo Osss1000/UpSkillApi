@@ -12,6 +12,7 @@ namespace UpSkillApi.DTOs
         public string Location { get; set; } = null!;
         public DateTime? DateAndTime { get; set; }
         public object NumberOfPeopleNeeded { get; internal set; }
+        public string ApplicationStatus { get; set; } = string.Empty;
         
     }
 }

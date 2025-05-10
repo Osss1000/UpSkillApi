@@ -199,43 +199,70 @@ namespace UpSkillApi.Controllers.OrganizationControllers
         }
         
         [HttpGet("details/{volunteeringJobId}")]
-        public async Task<IActionResult> GetVolunteeringJobDetails(int volunteeringJobId)
-        {
-            var post = await _context.VolunteeringJobs
-                .Include(p => p.Organization)
-                .ThenInclude(o => o.User)
-                .Include(p => p.VolunteeringApplications)
-                .ThenInclude(a => a.Client)
+public async Task<IActionResult> GetVolunteeringJobDetails(int volunteeringJobId)
+{
+    var post = await _context.VolunteeringJobs
+        .Include(p => p.Organization)
+            .ThenInclude(o => o.User)
+        .Include(p => p.VolunteeringApplications)
+            .ThenInclude(a => a.Client)
                 .ThenInclude(c => c.User)
-                .FirstOrDefaultAsync(p => p.VolunteeringJobId == volunteeringJobId);
+        .Include(p => p.VolunteeringApplications)
+            .ThenInclude(a => a.Worker)
+                .ThenInclude(w => w.User)
+        .Include(p => p.VolunteeringApplications)
+            .ThenInclude(a => a.ApplicationStatus) // ✅ ضروري
+        .FirstOrDefaultAsync(p => p.VolunteeringJobId == volunteeringJobId);
 
-            if (post == null)
-                return NotFound(new { success = false, message = "البوست غير موجود" });
+    if (post == null)
+        return NotFound(new { success = false, message = "البوست غير موجود" });
 
-            var dto = new VolunteeringPostDetailsDto
+    var applicants = post.VolunteeringApplications
+        .Where(a => a.ApplicationStatus.StatusEnum == ApplicationStatusEnum.Pending) // ✅ فلترة
+        .Select(a =>
+        {
+            if (a.Client != null && a.Client.User != null)
             {
-                PostId = post.VolunteeringJobId,
-                Title = post.Title,
-                Description = post.Description,
-                DateAndTime = post.DateAndTime,
-                Location = post.Location,
-                NumberOfPeopleNeeded = post.NumberOfPeopleNeeded,
-                OrganizationName = post.Organization.User.Name,
-                Applicants = post.VolunteeringApplications
-                    .Select(a => a.Client)
-                    .Select(c => new VolunteerApplicantDto
-                    {
-                        ClientId = c.ClientId,
-                        UserId = c.UserId,
-                        FullName = c.User.Name,
-                        PhoneNumber = c.User.PhoneNumber,
-                        Address = c.Address
-                    })
-                    .ToList()
-            };
+                return new VolunteerApplicantDto
+                {
+                    UserId = a.Client.UserId,
+                    FullName = a.Client.User.Name,
+                    PhoneNumber = a.Client.User.PhoneNumber,
+                    Address = a.Client.Address,
+                    Role = "Client"
+                };
+            }
+            else if (a.Worker != null && a.Worker.User != null)
+            {
+                return new VolunteerApplicantDto
+                {
+                    UserId = a.Worker.UserId,
+                    FullName = a.Worker.User.Name,
+                    PhoneNumber = a.Worker.User.PhoneNumber,
+                    Address = a.Worker.Address,
+                    Role = "Worker"
+                };
+            }
+            return null;
+        })
+        .Where(x => x != null)
+        .ToList();
 
-            return Ok(dto);
-        }
+    var dto = new VolunteeringPostDetailsDto
+    {
+        PostId = post.VolunteeringJobId,
+        Title = post.Title,
+        Description = post.Description,
+        DateAndTime = post.DateAndTime,
+        Location = post.Location,
+        NumberOfPeopleNeeded = post.NumberOfPeopleNeeded,
+        OrganizationName = post.Organization.User.Name,
+        Applicants = applicants
+    };
+
+    return Ok(dto);
+}
+
         
         
      
