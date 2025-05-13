@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UpSkillApi.Data;
 
@@ -11,9 +12,11 @@ using UpSkillApi.Data;
 namespace UpSkillApi.Migrations
 {
     [DbContext(typeof(UpSkillDbContext))]
-    partial class UpSkillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250513150506_AddSenderReceiverNamesToMessages")]
+    partial class AddSenderReceiverNamesToMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,18 +39,6 @@ namespace UpSkillApi.Migrations
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeliveredAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDelivered")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ReadAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("ReceiverId")
                         .HasColumnType("int");
@@ -72,7 +63,6 @@ namespace UpSkillApi.Migrations
 
                     b.ToTable("Messages");
                 });
-
 
             modelBuilder.Entity("PendingRegistration", b =>
                 {
@@ -217,24 +207,21 @@ namespace UpSkillApi.Migrations
                         new
                         {
                             ApplicationStatusId = 1,
-                            CreatedDate = new DateTime(2025, 5, 13, 15, 40, 30, 585, DateTimeKind.Utc).AddTicks(2610),
-
+                            CreatedDate = new DateTime(2025, 5, 13, 15, 5, 5, 740, DateTimeKind.Utc).AddTicks(820),
                             Description = "Awaiting review",
                             Status = 1
                         },
                         new
                         {
                             ApplicationStatusId = 2,
-                            CreatedDate = new DateTime(2025, 5, 13, 15, 40, 30, 585, DateTimeKind.Utc).AddTicks(2620),
-
+                            CreatedDate = new DateTime(2025, 5, 13, 15, 5, 5, 740, DateTimeKind.Utc).AddTicks(820),
                             Description = "Application accepted",
                             Status = 2
                         },
                         new
                         {
                             ApplicationStatusId = 3,
-                            CreatedDate = new DateTime(2025, 5, 13, 15, 40, 30, 585, DateTimeKind.Utc).AddTicks(2620),
-
+                            CreatedDate = new DateTime(2025, 5, 13, 15, 5, 5, 740, DateTimeKind.Utc).AddTicks(830),
                             Description = "Application denied",
                             Status = 3
                         });
@@ -258,10 +245,6 @@ namespace UpSkillApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ChatId");
-
-                    b.HasIndex("User1Id");
-
-                    b.HasIndex("User2Id");
 
                     b.ToTable("Chats");
                 });
@@ -939,25 +922,6 @@ namespace UpSkillApi.Migrations
                     b.Navigation("Sponsor");
                 });
 
-            modelBuilder.Entity("UpSkillApi.Models.Chat", b =>
-                {
-                    b.HasOne("UpSkillApi.Models.User", "User1")
-                        .WithMany("ChatsAsUser1")
-                        .HasForeignKey("User1Id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("UpSkillApi.Models.User", "User2")
-                        .WithMany("ChatsAsUser2")
-                        .HasForeignKey("User2Id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("User1");
-
-                    b.Navigation("User2");
-                });
-
             modelBuilder.Entity("UpSkillApi.Models.Client", b =>
                 {
                     b.HasOne("UpSkillApi.Models.User", "User")
@@ -1216,10 +1180,6 @@ namespace UpSkillApi.Migrations
 
             modelBuilder.Entity("UpSkillApi.Models.User", b =>
                 {
-                    b.Navigation("ChatsAsUser1");
-
-                    b.Navigation("ChatsAsUser2");
-
                     b.Navigation("Client");
 
                     b.Navigation("Organization");

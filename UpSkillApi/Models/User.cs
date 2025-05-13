@@ -33,4 +33,16 @@ public partial class User
     public bool EmailConfirmed { get; set; } = false;
     public string? EmailVerificationCode { get; set; }
     public DateTime? VerificationCodeExpiry { get; set; }
+    public ICollection<VolunteerPoints> VolunteerPoints { get; set; }
+    public ICollection<UserAdvertisement> UserAdvertisements { get; set; } = new List<UserAdvertisement>();
+    
+    public string? PasswordResetCode { get; set; }
+
+    public DateTime? ResetCodeExpiry { get; set; }
+    
+    public List<Chat> ChatsAsUser1 { get; set; }
+    public List<Chat> ChatsAsUser2 { get; set; }
+
+
+
 }
