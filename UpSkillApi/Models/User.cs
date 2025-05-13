@@ -44,4 +44,5 @@ public partial class User
     public List<Chat> ChatsAsUser2 { get; set; }
 
 
+
 }

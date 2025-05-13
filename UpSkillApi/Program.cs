@@ -31,6 +31,7 @@ public class Program
         builder.Services.AddScoped<VolunteeringApplicationRepository>();
         builder.Services.AddScoped<ChatRepository>();
 
+
         // ✅ Add SignalR
         builder.Services.AddSignalR();
 

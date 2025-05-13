@@ -244,6 +244,7 @@ namespace UpSkillApi.Controllers.OrganizationControllers
         
         [HttpGet("details/{volunteeringJobId}")]
         public async Task<IActionResult> GetVolunteeringJobDetails(int volunteeringJobId)
+
 {
     var post = await _context.VolunteeringJobs
         .Include(p => p.Organization)

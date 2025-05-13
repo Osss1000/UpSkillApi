@@ -28,6 +28,7 @@ namespace UpSkillApi.Data
         public DbSet<UserAdvertisement> UserAdvertisements { get; set; }
         public DbSet<Chat> Chats { get; set; }
         public DbSet<Message> Messages { get; set; }
+
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -73,6 +73,7 @@ namespace UpSkillApi.Migrations
                     b.ToTable("Messages");
                 });
 
+
             modelBuilder.Entity("PendingRegistration", b =>
                 {
                     b.Property<int>("Id")
@@ -217,6 +218,7 @@ namespace UpSkillApi.Migrations
                         {
                             ApplicationStatusId = 1,
                             CreatedDate = new DateTime(2025, 5, 13, 15, 40, 30, 585, DateTimeKind.Utc).AddTicks(2610),
+
                             Description = "Awaiting review",
                             Status = 1
                         },
@@ -224,6 +226,7 @@ namespace UpSkillApi.Migrations
                         {
                             ApplicationStatusId = 2,
                             CreatedDate = new DateTime(2025, 5, 13, 15, 40, 30, 585, DateTimeKind.Utc).AddTicks(2620),
+
                             Description = "Application accepted",
                             Status = 2
                         },
@@ -231,6 +234,7 @@ namespace UpSkillApi.Migrations
                         {
                             ApplicationStatusId = 3,
                             CreatedDate = new DateTime(2025, 5, 13, 15, 40, 30, 585, DateTimeKind.Utc).AddTicks(2620),
+
                             Description = "Application denied",
                             Status = 3
                         });

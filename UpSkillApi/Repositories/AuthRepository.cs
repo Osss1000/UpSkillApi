@@ -39,6 +39,7 @@ public class AuthRepository
             await _context.SaveChangesAsync();
         }
 
+
         // حفظ الصور
         var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/nationalIds");
         if (!Directory.Exists(uploadsFolder))
@@ -161,6 +162,7 @@ public class AuthRepository
         _context.PendingRegistrations.Remove(existing);
         await _context.SaveChangesAsync();
     }
+
 
     // حفظ الصور
     var nationalIdFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/nationalIds");
@@ -299,6 +301,7 @@ public class AuthRepository
             _context.PendingRegistrations.Remove(existing);
             await _context.SaveChangesAsync();
         }
+
 
         var recordFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/CommercialRecord");
         if (!Directory.Exists(recordFolder))

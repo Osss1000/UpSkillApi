@@ -26,6 +26,7 @@ namespace UpSkillApi.Controllers
                     message = "تم إرسال كود التفعيل إلى البريد الإلكتروني.",
                     email = dto.Email
                 });
+
             }
             catch (Exception ex)
             {
@@ -69,6 +70,7 @@ namespace UpSkillApi.Controllers
         {
             try
             {
+
                 var user = await _authRepo.CompleteWorkerRegistrationAsync(dto);
                 return Ok(user);
             }
@@ -90,6 +92,7 @@ namespace UpSkillApi.Controllers
                     email = dto.Email
                 });
                 
+
             }
             catch (Exception ex)
             {
