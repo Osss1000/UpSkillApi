@@ -8,7 +8,7 @@ namespace UpSkillApi.Controllers.OrganizationControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VolunteeringJobController : ControllerBase // Fixed typo: "Jop" -> "Job"
+    public class VolunteeringJobController : ControllerBase 
     {
         private readonly UpSkillDbContext _context;
 
@@ -63,14 +63,6 @@ namespace UpSkillApi.Controllers.OrganizationControllers
         {
             Console.WriteLine("✅✅ دخل الميثود الصح - UpdatePostOrg");
 
-            // طباعة البيانات للتأكيد
-            Console.WriteLine($"📌 ID: {dto.VolunteeringJobId}");
-            Console.WriteLine($"📌 Title: {dto.Title}");
-            Console.WriteLine($"📌 Date: {dto.Date}");
-            Console.WriteLine($"📌 Time: {dto.Time}");
-            Console.WriteLine($"📌 People Needed: {dto.NoOfPeopleNeeded}");
-            Console.WriteLine($"📌 Location: {dto.Location}");
-
             if (dto.VolunteeringJobId == 0 || string.IsNullOrWhiteSpace(dto.Title))
             {
                 return BadRequest(new { success = false, message = "البيانات غير مكتملة أو غير صحيحة." });
@@ -79,7 +71,6 @@ namespace UpSkillApi.Controllers.OrganizationControllers
             var post = await _context.VolunteeringJobs.FindAsync(dto.VolunteeringJobId);
             if (post == null)
             {
-                Console.WriteLine("❌ البوست غير موجود");
                 return NotFound(new { success = false, message = "البوست غير موجود" });
             }
 
@@ -95,12 +86,10 @@ namespace UpSkillApi.Controllers.OrganizationControllers
                 _context.VolunteeringJobs.Update(post);
                 await _context.SaveChangesAsync();
 
-                Console.WriteLine("✅ تم التعديل بنجاح");
                 return Ok(new { success = true, message = "تم تعديل البوست بنجاح" });
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ خطأ أثناء الحفظ: {ex.Message}");
                 return StatusCode(500, new { success = false, message = "حدث خطأ أثناء حفظ التعديلات", error = ex.Message });
             }
         }
@@ -121,19 +110,74 @@ namespace UpSkillApi.Controllers.OrganizationControllers
         [HttpPut("mark-as-done/{VoluntteringPostId}")]
         public async Task<ActionResult> MarkPostAsDoneAsync(int VoluntteringPostId)
         {
-            var post = await _context.VolunteeringJobs.FindAsync(VoluntteringPostId);
-            if (post == null)
-                return NotFound(new { success = false, message = "البوست غير موجود" }); ;
+            var post = await _context.VolunteeringJobs
+                .Include(p => p.Organization)
+                    .ThenInclude(o => o.User)
+                .Include(p => p.VolunteeringApplications.Where(a => a.ApplicationStatusId == (int)ApplicationStatusEnum.Approved))
+                    .ThenInclude(a => a.Client)
+                        .ThenInclude(c => c.User)
+                .Include(p => p.VolunteeringApplications.Where(a => a.ApplicationStatusId == (int)ApplicationStatusEnum.Approved))
+                    .ThenInclude(a => a.Worker)
+                        .ThenInclude(w => w.User)
+                .FirstOrDefaultAsync(p => p.VolunteeringJobId == VoluntteringPostId);
 
+            if (post == null)
+                return NotFound(new { success = false, message = "البوست غير موجود" });
+
+            // تحديث حالة البوست
             post.PostStatusId = 2; // "Done"
             post.ModifiedDate = DateTime.UtcNow;
             post.CompletedAt = DateTime.UtcNow;
 
-            _context.VolunteeringJobs.Update(post);
-            await _context.SaveChangesAsync();
-            return Ok(new { success = true, message = "تم إنهاء البوست بنجاح" });
-        }
+            foreach (var app in post.VolunteeringApplications)
+            {
+                var user = app.Client?.User ?? app.Worker?.User;
+                if (user == null)
+                    continue;
 
+                // تأكد إنه ماخدش النقاط قبل كده
+                bool alreadyGiven = await _context.VolunteerPoints.AnyAsync(p =>
+                    p.UserId == user.UserId && p.VolunteeringJobId == VoluntteringPostId);
+
+                if (alreadyGiven)
+                    continue;
+
+                int rewardPoints = 100;
+
+                user.Points += rewardPoints;
+
+                _context.VolunteerPoints.Add(new VolunteerPoints
+                {
+                    UserId = user.UserId,
+                    VolunteeringJobId = VoluntteringPostId,
+                    Points = rewardPoints,
+                    AwardedDate = DateTime.UtcNow
+                });
+
+                // إرسال الإيميل
+                try
+                {
+                    await EmailService.SendAsync(
+                        toEmail: user.Email,
+                        subject: "تم منحك نقاط مقابل مشاركتك التطوعية",
+                        body: $@"شكرًا لمشاركتك في الفرصة التطوعية <strong>{post.Title}</strong> التابعة لمنظمة <strong>{post.Organization?.User?.Name}</strong>.<br/>
+                                لقد تم منحك <strong>{rewardPoints} نقطة</strong> كمكافأة على مجهودك.<br/>
+                                تم اكتمال الحملة في تاريخ: <strong>{post.CompletedAt.ToString("yyyy-MM-dd HH:mm")}</strong>.<br/><br/>
+                                فريق UpSkill يشكرك على جهودك."
+                    );
+                }
+                catch (Exception ex)
+                {
+                    // ممكن تسجل الخطأ في لوج، أو تتجاهله حسب الرغبة
+                    Console.WriteLine($"فشل في إرسال الإيميل إلى {user.Email}: {ex.Message}");
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { success = true, message = "تم إنهاء البوست وتوزيع النقاط على جميع المتطوعين المقبولين" });
+        }
+        
         [HttpGet("completed/by-Organization/{userId}")]
         public async Task<ActionResult> GetCompletedVolunteeringPosts(int userId)
         {
@@ -199,7 +243,7 @@ namespace UpSkillApi.Controllers.OrganizationControllers
         }
         
         [HttpGet("details/{volunteeringJobId}")]
-public async Task<IActionResult> GetVolunteeringJobDetails(int volunteeringJobId)
+        public async Task<IActionResult> GetVolunteeringJobDetails(int volunteeringJobId)
 {
     var post = await _context.VolunteeringJobs
         .Include(p => p.Organization)

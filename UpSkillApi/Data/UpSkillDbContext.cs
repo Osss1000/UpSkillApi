@@ -24,6 +24,10 @@ namespace UpSkillApi.Data
         public DbSet<Profession> Professions { get; set; }
         public DbSet<PostStatus> PostStatuses { get; set; }
         public DbSet<PendingRegistration> PendingRegistrations { get; set; }
+        public DbSet<VolunteerPoints> VolunteerPoints { get; set; }
+        public DbSet<UserAdvertisement> UserAdvertisements { get; set; }
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Message> Messages { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -136,6 +140,8 @@ namespace UpSkillApi.Data
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasIndex(e => e.Email).IsUnique();
+                entity.Property(u => u.PasswordResetCode).HasMaxLength(10);
+                entity.Property(u => u.ResetCodeExpiry);
             });
 
             modelBuilder.Entity<Worker>(entity =>
@@ -168,6 +174,58 @@ namespace UpSkillApi.Data
                 entity.HasOne(d => d.VolunteeringJob).WithMany(p => p.VolunteeringApplications).HasForeignKey(d => d.VolunteeringJobId).OnDelete(DeleteBehavior.NoAction);
                 entity.HasOne(d => d.Worker).WithMany(p => p.VolunteeringApplications).HasForeignKey(d => d.WorkerId).OnDelete(DeleteBehavior.NoAction);
             });
+            
+            modelBuilder.Entity<VolunteerPoints>(entity =>
+            {
+                entity.HasKey(e => e.VolunteerPointsId);
+
+                entity.Property(e => e.Points).IsRequired();
+                entity.Property(e => e.AwardedDate).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.VolunteerPoints)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne(d => d.VolunteeringJob)
+                    .WithMany(p => p.VolunteerPoints)
+                    .HasForeignKey(d => d.VolunteeringJobId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+            
+            modelBuilder.Entity<UserAdvertisement>(entity =>
+            {
+                entity.HasKey(e => e.UserAdvertisementId);
+
+                entity.Property(e => e.RedeemedAt).IsRequired();
+                entity.Property(e => e.RedeemCode).IsRequired().HasMaxLength(20);
+
+                entity.HasOne(e => e.User)
+                    .WithMany(u => u.UserAdvertisements)
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne(e => e.Advertisement)
+                    .WithMany(a => a.UserAdvertisements)
+                    .HasForeignKey(e => e.AdvertisementId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+            
+            modelBuilder.Entity<Chat>(entity =>
+            {
+                entity.HasKey(e => e.ChatId);
+
+                entity.HasOne(e => e.User1)
+                    .WithMany(u => u.ChatsAsUser1)
+                    .HasForeignKey(e => e.User1Id)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne(e => e.User2)
+                    .WithMany(u => u.ChatsAsUser2)
+                    .HasForeignKey(e => e.User2Id)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+            
 
             OnModelCreatingPartial(modelBuilder);
         }

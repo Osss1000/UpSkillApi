@@ -19,6 +19,8 @@ public partial class VolunteeringJob
     public virtual PostStatus PostStatus { get; set; } = null!;
     public virtual Organization Organization { get; set; } = null!;
     public virtual ICollection<VolunteeringApplication> VolunteeringApplications { get; set; } = new List<VolunteeringApplication>();
+    public ICollection<VolunteerPoints> VolunteerPoints { get; set; }
+
     public DateTime CompletedAt { get;  set; }
     
 }

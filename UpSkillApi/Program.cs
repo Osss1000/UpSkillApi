@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UpSkillApi.Data;
 using UpSkillApi.Repositories;
+using UpSkillApi.Hubs; // لازم تضيف ال namespace اللي فيه ChatHub
 
 namespace UpSkillApi;
 
@@ -15,11 +16,11 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        // Register DbContext with connection string from appsettings
+        // ✅ Register DbContext
         builder.Services.AddDbContext<UpSkillDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-        // Register repositories
+        // ✅ Register Repositories
         builder.Services.AddScoped<WorkerRepository>();
         builder.Services.AddScoped<AdvertisementRepository>();
         builder.Services.AddScoped<UserRepository>();
@@ -28,16 +29,27 @@ public class Program
         builder.Services.AddScoped<ClientPostRepository>();
         builder.Services.AddScoped<WorkerApplicationRepository>();
         builder.Services.AddScoped<VolunteeringApplicationRepository>();
+        builder.Services.AddScoped<ChatRepository>();
 
+        // ✅ Add SignalR
+        builder.Services.AddSignalR();
 
         // ✅ Enable CORS
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowAll", policy =>
             {
-                policy.AllowAnyOrigin()
+                policy
+                    .WithOrigins(
+                        "http://localhost",
+                        "http://127.0.0.1",
+                        "null", // لو الملف HTML محلي
+                        "file://", // نفس السبب
+                        "https://upskill.eu.ngrok.io" // رابط ngrok بتاعك
+                    )
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowCredentials(); // 👈 مهم جدًا لـ SignalR
             });
         });
 
@@ -58,6 +70,9 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+
+        // ✅ Map SignalR endpoint
+        app.MapHub<ChatHub>("/chatHub");
 
         app.Run();
     }

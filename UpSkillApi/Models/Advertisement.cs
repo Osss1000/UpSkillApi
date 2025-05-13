@@ -26,4 +26,6 @@ public partial class Advertisement
     public bool IsActive { get; set; }
 
     public virtual Sponsor Sponsor { get; set; } = null!;
+    public ICollection<UserAdvertisement> UserAdvertisements { get; set; } = new List<UserAdvertisement>();
+
 }

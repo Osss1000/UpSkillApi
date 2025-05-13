@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UpSkillApi.Data;
 
@@ -11,9 +12,11 @@ using UpSkillApi.Data;
 namespace UpSkillApi.Migrations
 {
     [DbContext(typeof(UpSkillDbContext))]
-    partial class UpSkillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250510120240_forgetpassword")]
+    partial class forgetpassword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,57 +24,6 @@ namespace UpSkillApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Message", b =>
-                {
-                    b.Property<int>("MessageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"));
-
-                    b.Property<int>("ChatId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeliveredAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDelivered")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ReadAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ReceiverId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReceiverName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SenderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SenderName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("MessageId");
-
-                    b.HasIndex("ChatId");
-
-                    b.ToTable("Messages");
-                });
 
             modelBuilder.Entity("PendingRegistration", b =>
                 {
@@ -216,50 +168,24 @@ namespace UpSkillApi.Migrations
                         new
                         {
                             ApplicationStatusId = 1,
-                            CreatedDate = new DateTime(2025, 5, 13, 15, 40, 30, 585, DateTimeKind.Utc).AddTicks(2610),
+                            CreatedDate = new DateTime(2025, 5, 10, 12, 2, 40, 483, DateTimeKind.Utc).AddTicks(850),
                             Description = "Awaiting review",
                             Status = 1
                         },
                         new
                         {
                             ApplicationStatusId = 2,
-                            CreatedDate = new DateTime(2025, 5, 13, 15, 40, 30, 585, DateTimeKind.Utc).AddTicks(2620),
+                            CreatedDate = new DateTime(2025, 5, 10, 12, 2, 40, 483, DateTimeKind.Utc).AddTicks(850),
                             Description = "Application accepted",
                             Status = 2
                         },
                         new
                         {
                             ApplicationStatusId = 3,
-                            CreatedDate = new DateTime(2025, 5, 13, 15, 40, 30, 585, DateTimeKind.Utc).AddTicks(2620),
+                            CreatedDate = new DateTime(2025, 5, 10, 12, 2, 40, 483, DateTimeKind.Utc).AddTicks(850),
                             Description = "Application denied",
                             Status = 3
                         });
-                });
-
-            modelBuilder.Entity("UpSkillApi.Models.Chat", b =>
-                {
-                    b.Property<int>("ChatId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChatId"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("User1Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("User2Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("ChatId");
-
-                    b.HasIndex("User1Id");
-
-                    b.HasIndex("User2Id");
-
-                    b.ToTable("Chats");
                 });
 
             modelBuilder.Entity("UpSkillApi.Models.Client", b =>
@@ -913,17 +839,6 @@ namespace UpSkillApi.Migrations
                     b.ToTable("VolunteerPoints");
                 });
 
-            modelBuilder.Entity("Message", b =>
-                {
-                    b.HasOne("UpSkillApi.Models.Chat", "Chat")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chat");
-                });
-
             modelBuilder.Entity("UpSkillApi.Models.Advertisement", b =>
                 {
                     b.HasOne("UpSkillApi.Models.Sponsor", "Sponsor")
@@ -933,25 +848,6 @@ namespace UpSkillApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Sponsor");
-                });
-
-            modelBuilder.Entity("UpSkillApi.Models.Chat", b =>
-                {
-                    b.HasOne("UpSkillApi.Models.User", "User1")
-                        .WithMany("ChatsAsUser1")
-                        .HasForeignKey("User1Id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("UpSkillApi.Models.User", "User2")
-                        .WithMany("ChatsAsUser2")
-                        .HasForeignKey("User2Id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("User1");
-
-                    b.Navigation("User2");
                 });
 
             modelBuilder.Entity("UpSkillApi.Models.Client", b =>
@@ -1169,11 +1065,6 @@ namespace UpSkillApi.Migrations
                     b.Navigation("WorkerApplications");
                 });
 
-            modelBuilder.Entity("UpSkillApi.Models.Chat", b =>
-                {
-                    b.Navigation("Messages");
-                });
-
             modelBuilder.Entity("UpSkillApi.Models.Client", b =>
                 {
                     b.Navigation("ClientPosts");
@@ -1212,10 +1103,6 @@ namespace UpSkillApi.Migrations
 
             modelBuilder.Entity("UpSkillApi.Models.User", b =>
                 {
-                    b.Navigation("ChatsAsUser1");
-
-                    b.Navigation("ChatsAsUser2");
-
                     b.Navigation("Client");
 
                     b.Navigation("Organization");

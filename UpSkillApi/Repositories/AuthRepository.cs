@@ -27,6 +27,17 @@ public class AuthRepository
 
         if (dto.FrontNationalIdImage == null || dto.BackNationalIdImage == null)
             throw new Exception("يجب رفع صورتي البطاقة.");
+        
+        
+        // احذف أي تسجيل مؤقت قديم بنفس الإيميل والدور
+        var existing = await _context.PendingRegistrations
+            .FirstOrDefaultAsync(p => p.Email == dto.Email && p.Role == "client");
+
+        if (existing != null)
+        {
+            _context.PendingRegistrations.Remove(existing);
+            await _context.SaveChangesAsync();
+        }
 
         // حفظ الصور
         var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/nationalIds");
@@ -140,6 +151,16 @@ public class AuthRepository
 
     if (dto.FrontNationalIdImage == null || dto.BackNationalIdImage == null || dto.ClearanceCertificateImage == null)
         throw new Exception("يجب رفع صورتي البطاقة وصورة الفيش.");
+    
+    // احذف أي تسجيل مؤقت قديم بنفس الإيميل والدور
+    var existing = await _context.PendingRegistrations
+        .FirstOrDefaultAsync(p => p.Email == dto.Email && p.Role == "worker");
+
+    if (existing != null)
+    {
+        _context.PendingRegistrations.Remove(existing);
+        await _context.SaveChangesAsync();
+    }
 
     // حفظ الصور
     var nationalIdFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/nationalIds");
@@ -269,6 +290,15 @@ public class AuthRepository
 
         if (dto.CommercialRecordImage == null)
             throw new Exception("يجب رفع صورة السجل التجاري.");
+        // احذف أي تسجيل مؤقت قديم بنفس الإيميل والدور
+        var existing = await _context.PendingRegistrations
+            .FirstOrDefaultAsync(p => p.Email == dto.Email && p.Role == "organization");
+
+        if (existing != null)
+        {
+            _context.PendingRegistrations.Remove(existing);
+            await _context.SaveChangesAsync();
+        }
 
         var recordFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/CommercialRecord");
         if (!Directory.Exists(recordFolder))
@@ -389,6 +419,59 @@ public class AuthRepository
                 Role = user.Role
             
         };
+    }
+    
+    public async Task<bool> SendPasswordResetCodeAsync(string email)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null) return false;
+
+        var resetCode = new Random().Next(100000, 999999).ToString();
+
+        user.PasswordResetCode = resetCode;
+        user.ResetCodeExpiry = DateTime.UtcNow.AddMinutes(10);
+
+        await _context.SaveChangesAsync();
+
+        await EmailService.SendAsync(
+            toEmail: user.Email,
+            subject: "إعادة تعيين كلمة المرور",
+            body: $@"<p>استخدم الكود التالي لإعادة تعيين كلمة المرور الخاصة بك:</p>
+                     <h2 style='color:blue'>{resetCode}</h2>
+                     <p>الكود صالح لمدة 10 دقائق.</p>"
+        );
+
+        return true;
+    }
+
+    public async Task<bool> VerifyPasswordResetCodeAsync(string email, string code)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u =>
+            u.Email == email &&
+            u.PasswordResetCode == code &&
+            u.ResetCodeExpiry > DateTime.UtcNow);
+
+        return user != null;
+    }
+
+    public async Task<bool> ResetPasswordAsync(string email, string code, string newPassword)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u =>
+            u.Email == email &&
+            u.PasswordResetCode == code &&
+            u.ResetCodeExpiry > DateTime.UtcNow);
+
+        if (user == null) return false;
+
+        using var hmac = new System.Security.Cryptography.HMACSHA512();
+        user.PasswordSalt = hmac.Key;
+        user.PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(newPassword));
+
+        user.PasswordResetCode = null;
+        user.ResetCodeExpiry = null;
+
+        await _context.SaveChangesAsync();
+        return true;
     }
 
       

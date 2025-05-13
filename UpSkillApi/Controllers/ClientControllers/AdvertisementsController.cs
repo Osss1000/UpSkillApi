@@ -24,5 +24,16 @@ namespace UpSkillApi.Controllers
 
             return Ok(result);
         }
+        
+        [HttpPost("redeem")]
+        public async Task<IActionResult> RedeemAdvertisement([FromBody] RedeemAdvertisementDto dto)
+        {
+            var success = await _adRepo.RedeemAdvertisementAsync(dto.UserId, dto.AdvertisementId);
+    
+            if (!success)
+                return BadRequest("فشل في استبدال النقاط. تأكد من صلاحية العرض ورصيد النقاط.");
+
+            return Ok(new { success = true, message = "تم الاستبدال بنجاح" });
+        }
     }
 }
