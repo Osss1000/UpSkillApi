@@ -217,6 +217,7 @@ namespace UpSkillApi.Migrations
                         {
                             ApplicationStatusId = 1,
                             CreatedDate = new DateTime(2025, 5, 15, 9, 29, 32, 772, DateTimeKind.Utc).AddTicks(2400),
+
                             Description = "Awaiting review",
                             Status = 1
                         },
@@ -657,6 +658,9 @@ namespace UpSkillApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
+
+                    b.Property<DateTime?>("ResetCodeExpiry")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ResetCodeExpiry")
                         .HasColumnType("datetime2");
