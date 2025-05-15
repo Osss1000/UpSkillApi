@@ -14,5 +14,6 @@ namespace UpSkillApi.DTOs
 
         // 👇 New field
         public string ProfessionName { get; set; }
+        public int UserId { get; set; }
     }
 }

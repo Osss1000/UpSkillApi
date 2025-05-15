@@ -144,6 +144,10 @@ namespace UpSkillApi.Data
                 entity.Property(u => u.PasswordResetCode).HasMaxLength(10);
                 entity.Property(u => u.ResetCodeExpiry);
             });
+            modelBuilder.Entity<User>()
+                .Property(u => u.Points)
+                .IsRequired()
+                .HasDefaultValue(0);
 
             modelBuilder.Entity<Worker>(entity =>
             {

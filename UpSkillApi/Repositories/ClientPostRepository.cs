@@ -171,7 +171,9 @@ namespace UpSkillApi.Repositories
                 .Include(p => p.WorkerApplications)
                 .Select(p => new ActiveClientPostDto
                 {
+                    
                     PostId = p.ClientPostId,
+                    UserId = p.Client.User.UserId,
                     Title = p.Title,
                     Details = p.Details ?? "",
                     DateAndTime = p.DateAndTime,

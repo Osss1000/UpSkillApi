@@ -11,5 +11,7 @@ namespace UpSkillApi.DTOs
         public string ProfessionName { get; set; } = string.Empty;
         public string ClientName { get; set; } = string.Empty; // ✅ جديد
         public bool IsApplied { get; set; }
+        
+        public int UserId { get; set; }
     }
 }
