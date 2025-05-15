@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UpSkillApi.Data;
 
@@ -11,9 +12,11 @@ using UpSkillApi.Data;
 namespace UpSkillApi.Migrations
 {
     [DbContext(typeof(UpSkillDbContext))]
-    partial class UpSkillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250515092933_FixUserPointsColumn")]
+    partial class FixUserPointsColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,7 +220,6 @@ namespace UpSkillApi.Migrations
                         {
                             ApplicationStatusId = 1,
                             CreatedDate = new DateTime(2025, 5, 15, 9, 29, 32, 772, DateTimeKind.Utc).AddTicks(2400),
-
                             Description = "Awaiting review",
                             Status = 1
                         },
@@ -658,9 +660,6 @@ namespace UpSkillApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
-
-                    b.Property<DateTime?>("ResetCodeExpiry")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ResetCodeExpiry")
                         .HasColumnType("datetime2");

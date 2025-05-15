@@ -181,6 +181,7 @@ namespace UpSkillApi.Repositories
             return new OrganizationProfileDto
             {
                 OrganizationId = org.OrganizationId,
+                UserId = org.UserId,
                 Name = org.User.Name,
                 Email = org.User.Email,
                 PhoneNumber = org.User.PhoneNumber,

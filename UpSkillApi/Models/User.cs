@@ -20,8 +20,7 @@ public partial class User
 
     public DateTime? ModifiedDate { get; set; }
 
-    public int? Points { get; set; }
-
+    public int Points { get; set; } = 0;
     public string? PhoneNumber { get; set; }
 
     public virtual Client? Client { get; set; }
