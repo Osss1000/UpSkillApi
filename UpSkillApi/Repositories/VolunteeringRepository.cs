@@ -190,7 +190,6 @@ namespace UpSkillApi.Repositories
         }
         public async Task<List<VolunteeringPostDto>> GetAllVolunteeringPostsForWorkerAsync(int userId)
         {
-            // 🛠️ تحويل ال UserId إلى WorkerId
             var worker = await _context.Workers.FirstOrDefaultAsync(w => w.UserId == userId);
             if (worker == null)
             {
