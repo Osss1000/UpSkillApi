@@ -30,6 +30,8 @@ public class Program
         builder.Services.AddScoped<WorkerApplicationRepository>();
         builder.Services.AddScoped<VolunteeringApplicationRepository>();
         builder.Services.AddScoped<ChatRepository>();
+        builder.Services.AddScoped<WorkerImageRepo>();
+
 
 
         // ✅ Add SignalR

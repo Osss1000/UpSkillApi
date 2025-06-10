@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UpSkillApi.Data;
 
@@ -11,9 +12,11 @@ using UpSkillApi.Data;
 namespace UpSkillApi.Migrations
 {
     [DbContext(typeof(UpSkillDbContext))]
-    partial class UpSkillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250610142714_AddWorkerImagesTable")]
+    partial class AddWorkerImagesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,7 +220,6 @@ namespace UpSkillApi.Migrations
                         {
                             ApplicationStatusId = 1,
                             CreatedDate = new DateTime(2025, 6, 10, 14, 27, 14, 111, DateTimeKind.Utc).AddTicks(8020),
-
                             Description = "Awaiting review",
                             Status = 1
                         },
@@ -225,7 +227,6 @@ namespace UpSkillApi.Migrations
                         {
                             ApplicationStatusId = 2,
                             CreatedDate = new DateTime(2025, 6, 10, 14, 27, 14, 111, DateTimeKind.Utc).AddTicks(8020),
-
                             Description = "Application accepted",
                             Status = 2
                         },
@@ -233,7 +234,6 @@ namespace UpSkillApi.Migrations
                         {
                             ApplicationStatusId = 3,
                             CreatedDate = new DateTime(2025, 6, 10, 14, 27, 14, 111, DateTimeKind.Utc).AddTicks(8020),
-
                             Description = "Application denied",
                             Status = 3
                         });
