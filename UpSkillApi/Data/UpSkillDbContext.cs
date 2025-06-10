@@ -28,6 +28,7 @@ namespace UpSkillApi.Data
         public DbSet<UserAdvertisement> UserAdvertisements { get; set; }
         public DbSet<Chat> Chats { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<WorkerImage> WorkerImages { get; set; }
 
         
 
@@ -230,6 +231,13 @@ namespace UpSkillApi.Data
                     .HasForeignKey(e => e.User2Id)
                     .OnDelete(DeleteBehavior.NoAction);
             });
+            
+            modelBuilder.Entity<WorkerImage>()
+                .HasOne(wi => wi.Worker)
+                .WithMany(w => w.WorkerImages)
+                .HasForeignKey(wi => wi.WorkerId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             
 
             OnModelCreatingPartial(modelBuilder);

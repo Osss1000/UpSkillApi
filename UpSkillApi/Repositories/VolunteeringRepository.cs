@@ -196,7 +196,6 @@ namespace UpSkillApi.Repositories
                 throw new Exception("العامل غير موجود");
             }
             int workerId = worker.WorkerId;
-
             var posts = await _context.VolunteeringJobs
                 .Where(p=>p.PostStatusId==1)
                 .Include(p => p.Organization)

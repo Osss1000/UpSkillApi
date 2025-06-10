@@ -31,4 +31,7 @@ public partial class Worker
     public virtual ICollection<VolunteeringApplication> VolunteeringApplications { get; set; } = new List<VolunteeringApplication>();
 
     public virtual ICollection<WorkerApplication> WorkerApplications { get; set; } = new List<WorkerApplication>();
+    
+    public ICollection<WorkerImage> WorkerImages { get; set; }
+
 }
