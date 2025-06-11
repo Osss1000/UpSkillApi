@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
 using UpSkillApi.Data;
 
 public class WorkerImageRepo
@@ -20,6 +21,8 @@ public class WorkerImageRepo
             Directory.CreateDirectory(folderPath);
 
         var result = new List<WorkerImageDTO>();
+        var worker = await _context.Workers.FirstOrDefaultAsync(w => w.UserId == dto.UserId);
+
 
         foreach (var file in dto.Images)
         {
@@ -33,7 +36,7 @@ public class WorkerImageRepo
 
             var entity = new WorkerImage
             {
-                WorkerId = dto.WorkerId,
+                WorkerId = worker.WorkerId,
                 ImagePath = $"/uploads/workerImages/{uniqueName}",
                 CreatedAt = DateTime.UtcNow
             };
