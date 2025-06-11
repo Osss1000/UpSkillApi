@@ -30,7 +30,9 @@ public class Program
         builder.Services.AddScoped<WorkerApplicationRepository>();
         builder.Services.AddScoped<VolunteeringApplicationRepository>();
         builder.Services.AddScoped<ChatRepository>();
-        builder.Services.AddScoped<WorkerImageRepo>();
+        builder.Services.AddScoped<WorkerImageRepository>();
+        builder.Services.AddScoped<RatingRepository>();
+
 
 
 
@@ -71,6 +73,9 @@ public class Program
         app.UseCors("AllowAll");
 
         app.UseAuthorization();
+        
+        app.UseStaticFiles(); 
+
 
         app.MapControllers();
 

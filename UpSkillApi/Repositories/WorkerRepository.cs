@@ -63,6 +63,7 @@ namespace UpSkillApi.Repositories
 
         public async Task<WorkerProfileDto?> GetWorkerProfileByUserIdAsync(int userId)
         {
+            
             // 🛠️ نحول UserId إلى WorkerId
             var worker = await _context.Workers
                 .Include(w => w.User)
@@ -71,6 +72,13 @@ namespace UpSkillApi.Repositories
                 .ThenInclude(r => r.Client)
                 .ThenInclude(c => c.User)
                 .FirstOrDefaultAsync(w => w.UserId == userId);
+            
+            
+            var imagePaths = await _context.WorkerImages
+                .Where(img => img.WorkerId == worker.WorkerId)
+                .Select(img => img.ImagePath)
+                .ToListAsync();
+
 
             if (worker == null)
                 return null;
@@ -81,6 +89,7 @@ namespace UpSkillApi.Repositories
                 Bio = worker.User.Bio,
                 Profession = worker.Profession?.Name,
                 ExperienceYears = worker.Experience,
+                ImagePaths = imagePaths , //newwwwwwwww
                 PhoneNumber = worker.User.PhoneNumber,
                 Address = worker.Address,
                 AverageRating = worker.Ratings.Any() ? worker.Ratings.Average(r => r.Score) : 0,
