@@ -10,9 +10,7 @@ namespace UpSkillApi.DTOs
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
 
-        // Optional for future
-        public string? ProfileImagePath { get; set; } = null;
-        public List<string> WorkImages { get; set; } = new(); 
+        public List<string> ImagePaths { get; set; } = new();
 
         // Full list of ratings
         public List<RatingDto> Ratings { get; set; } = new();
