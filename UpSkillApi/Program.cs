@@ -35,6 +35,7 @@ public class Program
 
 
 
+
         // ✅ Add SignalR
         builder.Services.AddSignalR();
 

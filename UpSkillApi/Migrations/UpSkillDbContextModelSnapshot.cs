@@ -217,6 +217,7 @@ namespace UpSkillApi.Migrations
                         {
                             ApplicationStatusId = 1,
                             CreatedDate = new DateTime(2025, 6, 10, 14, 27, 14, 111, DateTimeKind.Utc).AddTicks(8020),
+
                             Description = "Awaiting review",
                             Status = 1
                         },
@@ -224,6 +225,7 @@ namespace UpSkillApi.Migrations
                         {
                             ApplicationStatusId = 2,
                             CreatedDate = new DateTime(2025, 6, 10, 14, 27, 14, 111, DateTimeKind.Utc).AddTicks(8020),
+
                             Description = "Application accepted",
                             Status = 2
                         },
@@ -231,6 +233,7 @@ namespace UpSkillApi.Migrations
                         {
                             ApplicationStatusId = 3,
                             CreatedDate = new DateTime(2025, 6, 10, 14, 27, 14, 111, DateTimeKind.Utc).AddTicks(8020),
+
                             Description = "Application denied",
                             Status = 3
                         });
